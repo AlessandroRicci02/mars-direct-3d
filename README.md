@@ -54,30 +54,30 @@ Choose **The mission** or **Beyond Mars** in the top navigation. The last Mars D
 
 Drag the scene to orbit, pause with the pause button or Space, toggle labels, replay a chapter, or enable Autoplay. Opening chapter notes pauses playback. Autoplay traverses both parts and stops at the end. Background tabs stop advancing time. Camera transitions use eased paths and are interrupted by another selection. Reduced-motion preferences disable cinematic camera flights and decorative motion.
 
-Part II offers crew/cargo route emphasis, four Mars development stages, water/material loops, chemical/NTP/NEP comparison, Mars/lunar/vehicle power systems, and logistics filters. Longer explanations and sources live in chapter notes and About.
+Part II offers crew/cargo route emphasis, the New World historical analogy (oceanic expedition to routine network with moral caveats), four Mars development stages and seven industrial progression phases, water/material loops, chemical/NTP/NEP propulsion comparison, Mars/lunar/vehicle power systems, asteroid in-space resources, and Robert Zubrin's interplanetary trade triangle expanded into an extended solar-system economy. Longer explanations and sources live in chapter notes and About.
 
 ## Where the code lives
 
-| File                             | Purpose                                                                 |
-| -------------------------------- | ----------------------------------------------------------------------- |
-| `src/data/mission.ts`            | Original ten chapters, copy, timing and scene modes                     |
-| `src/data/beyond.ts`             | Eleven future-facing chapters, epistemic labels and sources             |
-| `src/data/solarSystem.ts`        | Planet dimensions, orbital radii and collision bounds                   |
-| `src/data/orbitalMotion.ts`      | Accelerated circular orbits and illustrative solar transfer ellipse     |
-| `src/hooks/useMission.ts`        | Two-part navigation, progress, clock, pause, replay and options         |
-| `src/scene/MissionScene.tsx`     | Shared Canvas and scene selection                                       |
-| `src/scene/CelestialBodies.tsx`  | Textured planets, atmosphere, Sun, illumination and moving labels       |
-| `src/scene/Trajectories.tsx`     | Transfer marker, vehicle motion and future rendezvous                   |
-| `src/scene/Spacecraft.tsx`       | ERV, shared crew habitat, rotating tether and astronauts                |
-| `src/scene/MarsSurface.tsx`      | Landing, ISRU particles, filling tanks, reactor, rover and base         |
-| `src/scene/SurfaceTerrain.tsx`   | Lightweight terrain, horizon and instanced rocks                        |
-| `src/scene/BeyondScene.tsx`      | Lunar routes, industry, loops, asteroids, propulsion, power and network |
-| `src/scene/CameraController.tsx` | GSAP easing, responsive framing and bounded orbit controls              |
-| `src/scene/SceneLabels.tsx`      | DOM labels projected from 3D anchors                                    |
-| `src/ui/MissionUI.tsx`           | Existing visual interface, timeline, ISRU callout and modal notes       |
-| `src/ui/BeyondControls.tsx`      | Compact chapter interactions and explanations                           |
-| `src/styles.css`                 | Responsive styling                                                      |
-| `public/textures/`               | Local planet maps, attribution and license                              |
+| File                             | Purpose                                                                                                |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `src/data/mission.ts`            | Original ten chapters, copy, timing and scene modes                                                    |
+| `src/data/beyond.ts`             | Eleven future-facing chapters, epistemic labels and sources                                            |
+| `src/data/solarSystem.ts`        | Planet dimensions, orbital radii and collision bounds                                                  |
+| `src/data/orbitalMotion.ts`      | Accelerated circular orbits and illustrative solar transfer ellipse                                    |
+| `src/hooks/useMission.ts`        | Two-part navigation, progress, clock, pause, replay and options                                        |
+| `src/scene/MissionScene.tsx`     | Shared Canvas and scene selection                                                                      |
+| `src/scene/CelestialBodies.tsx`  | Textured planets, atmosphere, Sun, illumination and moving labels                                      |
+| `src/scene/Trajectories.tsx`     | Transfer marker, vehicle motion and future rendezvous                                                  |
+| `src/scene/Spacecraft.tsx`       | ERV, shared crew habitat, rotating tether and astronauts                                               |
+| `src/scene/MarsSurface.tsx`      | Landing, ISRU particles, filling tanks, reactor, rover and base                                        |
+| `src/scene/SurfaceTerrain.tsx`   | Lightweight terrain, horizon and instanced rocks                                                       |
+| `src/scene/BeyondScene.tsx`      | New World analogy, lunar routes, industry, loops, asteroids, propulsion, surface power, trade triangle |
+| `src/scene/CameraController.tsx` | GSAP easing, responsive framing and bounded orbit controls                                             |
+| `src/scene/SceneLabels.tsx`      | DOM labels projected from 3D anchors                                                                   |
+| `src/ui/MissionUI.tsx`           | Existing visual interface, timeline, ISRU callout, epistemic notes and modal                           |
+| `src/ui/BeyondControls.tsx`      | Compact chapter interactions, analogy banners, trade triangle and explanations                         |
+| `src/styles.css`                 | Responsive styling                                                                                     |
+| `public/textures/`               | Local planet maps, attribution and license                                                             |
 
 React, TypeScript, Vite, Three.js, React Three Fiber, Drei and GSAP power the experience. Fonts and textures are local; no API keys or backend are required. Internet access at runtime is only needed to open external references. Geometry is generated in code, terrain rocks are instanced, and pixel density is capped at 1.75.
 
@@ -85,7 +85,7 @@ The same `CrewHabitat` component appears in launch, tethered transit and on Mars
 
 ## Scientific scope
 
-**Visualization not to scale.** Part I presents a proposed historical architecture, not a scheduled mission. Part II explores concepts and long-term scenarios, not forecasts. Labels distinguish historical proposals, current technology, engineering concepts and speculation.
+**Visualization not to scale.** Part I presents a proposed historical architecture, not a scheduled mission. Part II explores concepts and long-term scenarios, not forecasts. Labels distinguish historical proposals, current technology, engineering concepts, Zubrin proposals and speculation.
 
 Earth and Mars share a diameter scale (12,756 km and 6,792 km); mean orbital radii preserve approximately 1:1.524. Bodies and spacecraft are enlarged relative to distances. The Sun is separately size-compressed. Beyond Mars diagrams use their own explanatory scales.
 
@@ -95,16 +95,21 @@ The first cargo crossing is shown as about eight months, matching Zubrin's 1995 
 
 Extracting hydrogen from Martian ice is explicitly a **future/local-water variant**. Return propellant is verified before crew departure. AI-enabled cost reductions, broad Martian industrial independence, helium-3 fusion and a multiworld economy are conditional scenarios, not demonstrated capabilities. Electric thrusters exist; the depicted nuclear-electric logistics infrastructure is an engineering concept. Propulsion animations illustrate thrust patterns, not quantitative performance rankings.
 
+The **New World analogy** is Robert Zubrin's historical argument comparing frontier economics, settlement creation, and technological spillovers to North America. Historical colonization involved conquest, displacement, and violence; the analogy is strictly limited to economic and technological frontier dynamics without romanticizing historical atrocities. Zubrin's **interplanetary trade triangle** (Earth → Mars → Asteroids → Earth) is a speculative economic model, and the extended 5-node solar economy is a broader conceptual extrapolation.
+
 ## Sources and assets
 
-- [The Mars Society: Mars Direct](https://www.marssociety.org/concepts/mars-direct/)
-- [Robert Zubrin: Mars, America's New Frontier (1995)](https://marspapers.org/paper/Zubrin_1995_3.pdf) — historical hydrogen, power, cargo transfer and surface-stay descriptions.
+- [Robert Zubrin: The Case for Mars (1996)](https://www.marssociety.org/concepts/mars-direct/)
+- [Robert Zubrin: "The Case for Colonizing Mars" (Ad Astra, 1996)](https://marspapers.org/paper/Zubrin_1996_1.pdf)
+- [Robert Zubrin: The New World on Mars (2024)](https://www.marssociety.org/news/2024/02/15/the-new-world-on-mars-now-available/)
+- [Robert Zubrin: Mars Direct (1995)](https://marspapers.org/paper/Zubrin_1995_3.pdf) — historical hydrogen, power, cargo transfer and surface-stay descriptions.
+- [The Mars Society: Mars Direct Concepts](https://www.marssociety.org/concepts/mars-direct/)
 - [NASA: Sabatier/electrolysis demonstration plant](https://ntrs.nasa.gov/citations/19970026756)
 - [NASA planetary fact sheet](https://nssdc.gsfc.nasa.gov/planetary/factsheet/)
 - [NASA: lunar water and ices](https://science.nasa.gov/moon/moon-water-and-ices/)
 - [NASA: in-situ resource utilization](https://www.nasa.gov/overview-in-situ-resource-utilization/)
-- [NASA: space nuclear propulsion](https://www.nasa.gov/space-technology-mission-directorate/tdm/space-nuclear-propulsion/)
-- [NASA: fission surface power](https://www.nasa.gov/directorates/stmd/fission-surface-power/)
+- [NASA: space nuclear propulsion (NTP & NEP)](https://www.nasa.gov/space-technology-mission-directorate/tdm/space-nuclear-propulsion/)
+- [NASA: fission surface power project](https://www.nasa.gov/directorates/stmd/fission-surface-power/)
 - [NASA/JPL: near-Earth asteroid resources](https://cneos.jpl.nasa.gov/about/nea_resource.html)
 
 Asset credits are in `public/textures/ATTRIBUTION.md`. Solar System Scope maps are CC BY 4.0; Earth and Moon maps come from Three.js examples. These are visualization assets, not precision measurements. This independent project is not affiliated with NASA or The Mars Society.

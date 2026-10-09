@@ -639,6 +639,13 @@ export default function MissionUI({ mission }: { mission: Mission }) {
           )}
           <div className="dialog-sources">
             <span>SCIENCE & SCENARIO NOTES</span>
+            <p className="dialog-epistemic-note">
+              <b>Epistemic note:</b> The North America / Mars analogy is Robert
+              Zubrin’s historical argument. The Earth–Mars–Asteroid trade
+              triangle is Zubrin’s proposed economic model. The extended
+              Earth–Moon–Mars–Asteroids network is a broader extrapolation, not
+              necessarily his exact architecture.
+            </p>
             {sourceNotes.map(([title, url]) => (
               <a key={url} href={url} target="_blank" rel="noreferrer">
                 {title} <ArrowUpRight size={13} />

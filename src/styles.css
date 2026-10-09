@@ -1687,6 +1687,70 @@ h1 > em {
   border-color: #d8946c;
   background: #da8f6814;
 }
+.new-world-banner {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: rgba(14, 21, 30, 0.7);
+  border: 1px solid rgba(231, 147, 112, 0.25);
+  border-radius: 4px;
+}
+.frontier-quote {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.8px;
+  color: #ffcba4;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.frontier-quote em {
+  font-style: normal;
+  color: var(--orange);
+  font-weight: 600;
+}
+.analogy-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 10px;
+  font-family: var(--mono);
+}
+.flow-track {
+  color: #a4b2b9;
+  letter-spacing: 0.5px;
+}
+.flow-track b {
+  color: #f1ece2;
+}
+.flow-track.highlight {
+  color: #f1b38d;
+}
+.flow-track.highlight b {
+  color: #ffbe95;
+}
+.analogy-disclaimer,
+.domains-note {
+  display: block;
+  font-size: 9.5px;
+  line-height: 1.5;
+  color: #8b979e;
+  margin-top: 8px;
+  border-left: 2px solid rgba(231, 147, 112, 0.35);
+  padding-left: 8px;
+}
+.dialog-epistemic-note {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #b0b8bc;
+  margin: 6px 0 12px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border-left: 2px solid var(--orange);
+}
+.dialog-epistemic-note b {
+  color: #ffcba4;
+}
 .transfer-note {
   position: absolute;
   right: 4%;

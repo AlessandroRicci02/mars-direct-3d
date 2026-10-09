@@ -146,6 +146,31 @@ function Station({
             roughness={0.25}
           />
         </mesh>
+      ) : kind === 'depot' ? (
+        <group>
+          <mesh castShadow position={[0, 0.6, 0]}>
+            <cylinderGeometry args={[0.22, 0.22, 1.4, 12]} />
+            <meshStandardMaterial
+              color="#b2b5b8"
+              metalness={0.7}
+              roughness={0.3}
+            />
+          </mesh>
+          <mesh position={[0, 0.6, 0]} rotation={[0, 0, Math.PI / 2]}>
+            <torusGeometry args={[0.55, 0.08, 12, 24]} />
+            <meshStandardMaterial color="#6a7d87" metalness={0.8} />
+          </mesh>
+          {[-1, 1].map((s) => (
+            <mesh
+              key={s}
+              position={[s * 0.9, 0.6, 0]}
+              rotation={[0, 0, Math.PI / 2]}
+            >
+              <boxGeometry args={[0.04, 1.1, 0.45]} />
+              <meshStandardMaterial color="#35526a" metalness={0.6} />
+            </mesh>
+          ))}
+        </group>
       ) : (
         <>
           <mesh castShadow position={[0, 0.6, 0]}>
@@ -635,15 +660,223 @@ function Power({ mission }: { mission: Mission }) {
   )
 }
 
-function Network({ mission }: { mission: Mission }) {
-  const final = mission.index === 10,
-    resilience = mission.index === 4
-  const links = useRef<THREE.Group>(null)
+function SailingShip({
+  scale = 1,
+  mission,
+}: {
+  scale?: number
+  mission: Mission
+}) {
+  const ship = useRef<THREE.Group>(null)
   useFrame(() => {
-    links.current?.children.forEach((child, i) => {
-      child.visible = !final || mission.progress.current > i * 0.1
-    })
+    if (!ship.current) return
+    const t = mission.elapsed.current
+    if (!mission.paused && !mission.reducedMotion) {
+      ship.current.rotation.z = Math.sin(t * 1.8) * 0.05
+      ship.current.rotation.x = Math.cos(t * 1.4) * 0.04
+      ship.current.position.y = -0.05 + Math.sin(t * 2.2) * 0.03
+    }
   })
+  return (
+    <group ref={ship} scale={scale}>
+      <mesh position={[0, 0.25, 0]} castShadow>
+        <boxGeometry args={[1.5, 0.45, 0.55]} />
+        <meshStandardMaterial color="#654321" roughness={0.8} />
+      </mesh>
+      <mesh
+        position={[-0.9, 0.35, 0]}
+        rotation={[0, 0, Math.PI / 4]}
+        castShadow
+      >
+        <boxGeometry args={[0.35, 0.35, 0.5]} />
+        <meshStandardMaterial color="#503318" roughness={0.8} />
+      </mesh>
+      <mesh position={[-1.25, 0.5, 0]} rotation={[0, 0, Math.PI / 6]}>
+        <cylinderGeometry args={[0.02, 0.03, 0.7, 8]} />
+        <meshStandardMaterial color="#3d2612" />
+      </mesh>
+      <mesh position={[0, 0.02, 0]}>
+        <boxGeometry args={[1.6, 0.1, 0.08]} />
+        <meshStandardMaterial color="#2d1c0d" />
+      </mesh>
+      <mesh position={[0.6, 0.55, 0]} castShadow>
+        <boxGeometry args={[0.5, 0.4, 0.5]} />
+        <meshStandardMaterial color="#503318" roughness={0.8} />
+      </mesh>
+      <mesh position={[0, 1.05, 0]} castShadow>
+        <cylinderGeometry args={[0.03, 0.04, 1.4, 8]} />
+        <meshStandardMaterial color="#3d2612" />
+      </mesh>
+      <mesh position={[0, 0.85, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.015, 0.015, 0.7, 8]} />
+        <meshStandardMaterial color="#2d1c0d" />
+      </mesh>
+      <mesh position={[-0.04, 0.85, 0]}>
+        <boxGeometry args={[0.02, 0.35, 0.65]} />
+        <meshStandardMaterial color="#f7f2ea" roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 1.35, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.012, 0.012, 0.5, 8]} />
+        <meshStandardMaterial color="#2d1c0d" />
+      </mesh>
+      <mesh position={[-0.04, 1.35, 0]}>
+        <boxGeometry args={[0.02, 0.28, 0.48]} />
+        <meshStandardMaterial color="#f7f2ea" roughness={0.9} />
+      </mesh>
+      <mesh position={[-0.5, 0.9, 0]} castShadow>
+        <cylinderGeometry args={[0.025, 0.035, 1.1, 8]} />
+        <meshStandardMaterial color="#3d2612" />
+      </mesh>
+      <mesh position={[-0.5, 0.75, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.012, 0.012, 0.55, 8]} />
+        <meshStandardMaterial color="#2d1c0d" />
+      </mesh>
+      <mesh position={[-0.54, 0.75, 0]}>
+        <boxGeometry args={[0.02, 0.3, 0.5]} />
+        <meshStandardMaterial color="#f7f2ea" roughness={0.9} />
+      </mesh>
+      <mesh position={[0.5, 0.85, 0]} castShadow>
+        <cylinderGeometry args={[0.02, 0.03, 1.0, 8]} />
+        <meshStandardMaterial color="#3d2612" />
+      </mesh>
+      <mesh position={[0.5, 0.75, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <cylinderGeometry args={[0.01, 0.01, 0.45, 8]} />
+        <meshStandardMaterial color="#2d1c0d" />
+      </mesh>
+      <mesh position={[0.46, 0.75, 0]}>
+        <boxGeometry args={[0.02, 0.26, 0.4]} />
+        <meshStandardMaterial color="#f7f2ea" roughness={0.9} />
+      </mesh>
+    </group>
+  )
+}
+
+function NewWorldAnalogy({ mission }: { mission: Mission }) {
+  const shipPos = useRef<THREE.Group>(null)
+  const craftPos = useRef<THREE.Group>(null)
+
+  useFrame(() => {
+    const t = mission.elapsed.current
+    if (shipPos.current && !mission.paused && !mission.reducedMotion) {
+      const travel = (t * 0.045) % 1
+      shipPos.current.position.set(-1.0 - travel * 5.0, 0, 1.2)
+    }
+    if (craftPos.current && !mission.paused && !mission.reducedMotion) {
+      const travel = (t * 0.06) % 1
+      const x = 2.5 + travel * 6.5
+      const y = Math.sin(travel * Math.PI) * 1.8
+      craftPos.current.position.set(x, y, 0)
+    }
+  })
+
+  return (
+    <>
+      <mesh position={[-3.5, -0.2, 1.2]} receiveShadow>
+        <boxGeometry args={[5.6, 0.1, 3.2]} />
+        <meshStandardMaterial
+          color="#0c2336"
+          roughness={0.4}
+          metalness={0.2}
+          transparent
+          opacity={0.8}
+        />
+      </mesh>
+      <mesh position={[-0.8, 0.2, 1.2]} castShadow>
+        <cylinderGeometry args={[0.7, 0.9, 0.4, 16]} />
+        <meshStandardMaterial color="#3f5139" roughness={0.9} />
+      </mesh>
+      <mesh position={[-6.0, 0.2, 1.2]} castShadow>
+        <cylinderGeometry args={[0.9, 1.1, 0.4, 16]} />
+        <meshStandardMaterial color="#495a43" roughness={0.9} />
+      </mesh>
+      <Line
+        points={[
+          [-0.8, 0.05, 1.2],
+          [-6.0, 0.05, 1.2],
+        ]}
+        color="#568ea6"
+        dashed
+        dashSize={0.25}
+        gapSize={0.15}
+        lineWidth={1.2}
+        transparent
+        opacity={0.5}
+      />
+      <group ref={shipPos} position={[-0.8, 0, 1.2]}>
+        <SailingShip mission={mission} scale={0.65} />
+      </group>
+      <Caption
+        at={[-0.8, 1.8, 1.2]}
+        title="EUROPE (15th–17th C.)"
+        sub="OLD WORLD EXPANSION"
+        mission={mission}
+      />
+      <Caption
+        at={[-5.8, 1.8, 1.2]}
+        title="AMERICAS"
+        sub="NEW SETTLEMENTS & ECONOMIES"
+        mission={mission}
+      />
+      <Caption
+        at={[-3.4, 2.5, 1.2]}
+        title="ATLANTIC CROSSING"
+        sub="EXPEDITION → TRANSPORTATION NETWORK"
+        mission={mission}
+      />
+
+      <Planet
+        kind="earth"
+        radius={1.4}
+        position={new THREE.Vector3(2.5, 0, 0)}
+        paused={mission.paused || mission.reducedMotion}
+      />
+      <Planet
+        kind="mars"
+        radius={0.75}
+        position={new THREE.Vector3(9.0, 0, 0)}
+        paused={mission.paused || mission.reducedMotion}
+      />
+      <Flow
+        from={[2.7, 0.5, 0]}
+        to={[8.8, 0.5, 0]}
+        mission={mission}
+        bend={1.8}
+        color={amber}
+        speed={1.1}
+      />
+      <group ref={craftPos} position={[2.5, 0, 0]}>
+        <Spacecraft scale={0.45} />
+      </group>
+      <Caption
+        at={[2.5, -2.2, 0]}
+        title="EARTH (21st C.+)"
+        sub="TERRESTRIAL ORIGIN"
+        mission={mission}
+      />
+      <Caption
+        at={[9.0, -1.6, 0]}
+        title="MARS"
+        sub="NEW BRANCH OF CIVILIZATION"
+        mission={mission}
+      />
+      <Caption
+        at={[5.8, 3.2, 0]}
+        title="INTERPLANETARY CROSSING"
+        sub="EXPENSIVE EXPEDITION → MULTI-WORLD SYSTEM"
+        mission={mission}
+      />
+
+      <Caption
+        at={[1.2, 4.4, 0]}
+        title="THE NEW WORLD ANALOGY"
+        sub="ROBERT ZUBRIN'S ARGUMENT · EXPEDITION BECOMES A TRANSPORTATION NETWORK"
+        mission={mission}
+      />
+    </>
+  )
+}
+
+function ResilienceScene({ mission }: { mission: Mission }) {
   return (
     <>
       <Planet
@@ -661,101 +894,250 @@ function Network({ mission }: { mission: Mission }) {
       <Caption
         at={[0, -2.5, 1]}
         title="EARTH"
-        sub="PEOPLE · KNOWLEDGE · EQUIPMENT"
+        sub="PEOPLE · KNOWLEDGE · FOUNDATION FOR A LONG TIME"
         mission={mission}
       />
       <Caption
         at={[10, -1.8, 0]}
         title="MARS"
-        sub={resilience ? 'DEPENDENT FOR A LONG TIME' : 'ENERGY · INDUSTRY'}
+        sub="DEPENDENT INITIALLY · INDEPENDENT CAPACITY OVER LONG TIMESCALES"
         mission={mission}
       />
-      {!resilience && (
+      <group position={[0, 0, 1]}>
+        <Station at={[0.8, 1.6, 0.4]} kind="power" scale={0.12} />
+        <mesh position={[1.2, 1.4, 0.2]}>
+          <sphereGeometry args={[0.07, 8, 8]} />
+          <meshBasicMaterial color="#a9e4ca" />
+        </mesh>
+      </group>
+      <group position={[10, 0, 0]}>
+        <Station at={[0.4, 0.9, 0.2]} kind="power" scale={0.12} />
+        <Station at={[-0.4, 0.8, -0.3]} kind="habitat" scale={0.14} />
+        <mesh position={[0.5, 0.8, 0.1]}>
+          <sphereGeometry args={[0.06, 8, 8]} />
+          <meshBasicMaterial color="#eeb27e" />
+        </mesh>
+      </group>
+      <Flow
+        from={[1, 1, 1]}
+        to={[9, 1, 0]}
+        mission={mission}
+        color={amber}
+        speed={1.2}
+      />
+      <Caption
+        at={[5, 2, 0]}
+        title="ONE PLANET → TWO WORLDS"
+        sub="CIVILIZATIONAL RESILIENCE · NOT AN EASY BACKUP"
+        mission={mission}
+      />
+    </>
+  )
+}
+
+function TradeNetwork({ mission }: { mission: Mission }) {
+  const opt = mission.option
+  const t = (mission.elapsed.current * 0.07) % 1
+  const step =
+    opt === 'triangle'
+      ? 2
+      : opt === 'expanded'
+        ? 3
+        : opt === 'nep'
+          ? 4
+          : t < 0.25
+            ? 0
+            : t < 0.5
+              ? 1
+              : t < 0.75
+                ? 2
+                : 3
+
+  const showStep1 = step >= 0
+  const showStep2 = step >= 1
+  const showStep3 = step >= 2
+  const showExpanded = step >= 3 || opt === 'expanded'
+  const showNep = opt === 'nep' || (opt === 'all' && step === 3)
+
+  return (
+    <>
+      <Planet
+        kind="earth"
+        radius={1.7}
+        position={new THREE.Vector3(0, 0, 1)}
+        paused={mission.paused || mission.reducedMotion}
+      />
+      <Planet
+        kind="mars"
+        radius={0.9}
+        position={new THREE.Vector3(10, 0, 0)}
+        paused={mission.paused || mission.reducedMotion}
+      />
+      <Caption
+        at={[0, -2.5, 1]}
+        title="EARTH"
+        sub="HIGH-TECH GOODS · SPECIALIZED MACHINERY · SETTLERS"
+        mission={mission}
+      />
+      <Caption
+        at={[10, -1.8, 0]}
+        title="MARS"
+        sub="FOOD · PROPELLANT · STRUCTURES · INDUSTRIAL SUPPORT"
+        mission={mission}
+      />
+
+      <Rock at={[8, 3.5, -5]} scale={0.8} />
+      <Rock at={[6.5, 4.2, -6.5]} scale={0.4} />
+      <Rock at={[9.5, 4.0, -7.5]} scale={0.5} />
+      <Caption
+        at={[8, 4.8, -5]}
+        title="ASTEROID BELT"
+        sub="METALS · WATER · VOLATILES · FEEDSTOCK"
+        mission={mission}
+      />
+
+      {showExpanded && (
         <>
-          <Moon at={[2, 3, -2]} radius={0.65} />
-          <Caption at={[2, 4.4, -2]} title="MOON" mission={mission} />
-          <Rock at={[8, 3, -5]} scale={0.7} />
-          <Rock at={[6, 4, -7]} scale={0.35} />
-          <Rock at={[10, 4, -8]} scale={0.42} />
-          <Caption at={[8, 4.4, -5]} title="ASTEROIDS" mission={mission} />
+          <Moon at={[2, 3, -1.5]} radius={0.65} />
+          <Caption
+            at={[2, 4.2, -1.5]}
+            title="MOON"
+            sub="O₂ · WATER ICE · LOCAL RESOURCES"
+            mission={mission}
+          />
+          <Station at={[0.8, -1.6, 1.5]} kind="depot" scale={0.8} />
+          <Caption
+            at={[0.8, -2.5, 1.5]}
+            title="ORBITAL INFRASTRUCTURE"
+            sub="DEPOTS · SHIPYARDS · IN-SPACE MANUFACTURING"
+            mission={mission}
+          />
         </>
       )}
-      <group ref={links}>
+
+      {showStep1 && (
         <group>
           <Flow
             from={[1, 1, 1]}
             to={[9, 1, 0]}
             mission={mission}
             color={amber}
-            dim={mission.option !== 'all' && mission.option !== 'ntp'}
             speed={1.2}
           />
-        </group>
-        {!resilience && (
-          <group>
-            <Flow
-              from={[0, 1, 1]}
-              to={[2, 3, -2]}
-              mission={mission}
-              color={mint}
-              dim={mission.option !== 'all' && mission.option !== 'chemical'}
-              bend={0.5}
-            />
-          </group>
-        )}
-        {!resilience && (
-          <group>
-            <Flow
-              from={[8, 3, -5]}
-              to={[10, 1, 0]}
-              mission={mission}
-              color={blue}
-              dim={mission.option !== 'all' && mission.option !== 'nep'}
-              speed={0.45}
-            />
-            <Flow
-              from={[8, 3, -5]}
-              to={[2, 3, -2]}
-              mission={mission}
-              color={blue}
-              bend={2}
-              speed={0.45}
-              dim={mission.option !== 'all' && mission.option !== 'nep'}
-            />
-          </group>
-        )}
-        {!resilience && (
-          <group>
-            <Station at={[10, 1.2, 0]} kind="power" scale={0.2} />
-            <Station at={[2, 3.7, -2]} kind="power" scale={0.12} />
-          </group>
-        )}
-      </group>
-      {resilience && (
-        <>
-          <group position={[0, 0, 1]}>
-            <Station at={[0.8, 1.6, 0.4]} kind="power" scale={0.12} />
-            <mesh position={[1.2, 1.4, 0.2]}>
-              <sphereGeometry args={[0.07, 8, 8]} />
-              <meshBasicMaterial color="#a9e4ca" />
-            </mesh>
-          </group>
-          <group position={[10, 0, 0]}>
-            <Station at={[0.4, 0.9, 0.2]} kind="power" scale={0.12} />
-            <Station at={[-0.4, 0.8, -0.3]} kind="habitat" scale={0.14} />
-            <mesh position={[0.5, 0.8, 0.1]}>
-              <sphereGeometry args={[0.06, 8, 8]} />
-              <meshBasicMaterial color="#eeb27e" />
-            </mesh>
-          </group>
           <Caption
-            at={[5, 2, 0]}
-            title="ONE PLANET → TWO WORLDS"
-            sub="DEPENDENT INITIALLY · INDEPENDENT CAPACITY OVER VERY LONG TIMESCALES"
+            at={[5, 2.2, 0.5]}
+            title="STEP 1: EARTH → MARS"
+            sub="HIGH-TECH ELECTRONICS · MACHINERY · PEOPLE"
             mission={mission}
+          />
+        </group>
+      )}
+
+      {showStep2 && (
+        <group>
+          <Flow
+            from={[10, 1.2, 0]}
+            to={[8, 3.5, -5]}
+            mission={mission}
+            color={mint}
+            bend={0.8}
+            speed={0.9}
+          />
+          <Caption
+            at={[9.5, 3.2, -2.5]}
+            title="STEP 2: MARS → ASTEROIDS"
+            sub="FOOD · SUPPLIES · EQUIPMENT · OPERATIONAL SUPPORT"
+            mission={mission}
+          />
+        </group>
+      )}
+
+      {showStep3 && (
+        <group>
+          <Flow
+            from={[8, 3.5, -5]}
+            to={[0.8, 1.8, 1]}
+            mission={mission}
+            color={blue}
+            bend={2.2}
+            speed={0.7}
+          />
+          <Caption
+            at={[4, 3.8, -2]}
+            title="STEP 3: ASTEROIDS → EARTH"
+            sub="METALS · RAW RESOURCES · IN-SPACE RETURN"
+            mission={mission}
+          />
+        </group>
+      )}
+
+      {showExpanded && (
+        <>
+          <Flow
+            from={[8, 3.5, -5]}
+            to={[2, 3, -1.5]}
+            mission={mission}
+            color={blue}
+            bend={1.5}
+            speed={0.6}
+          />
+          <Flow
+            from={[2, 3, -1.5]}
+            to={[0.8, -1.6, 1.5]}
+            mission={mission}
+            color={mint}
+            bend={0.5}
+            speed={0.8}
+          />
+          <Flow
+            from={[0, 1.5, 1]}
+            to={[2, 3, -1.5]}
+            mission={mission}
+            color={amber}
+            bend={0.5}
+            speed={1.0}
+          />
+          <Flow
+            from={[10, 1, 0]}
+            to={[15, 4, -4]}
+            mission={mission}
+            color={amber}
+            bend={0.3}
+            speed={0.7}
           />
         </>
       )}
+
+      {showNep && (
+        <group position={[6.5, 1.5, -1]}>
+          <Station at={[0, 0, 0]} kind="power" scale={0.4} />
+          <mesh position={[0, -0.6, 0]}>
+            <coneGeometry args={[0.08, 1.2, 8]} />
+            <meshBasicMaterial color={blue} transparent opacity={0.8} />
+          </mesh>
+          <Caption
+            at={[0, 1.2, 0]}
+            title="NEP CARGO FREIGHTER"
+            sub="HIGH-EFFICIENCY LOGISTICS · INTERPLANETARY CARGO SHIP"
+            mission={mission}
+          />
+        </group>
+      )}
+
+      <Caption
+        at={[4.5, -0.6, 0]}
+        title={
+          opt === 'triangle' || (!showExpanded && opt !== 'nep')
+            ? "ZUBRIN'S PROPOSED INTERPLANETARY TRADE TRIANGLE"
+            : 'EXTENDED SOLAR-SYSTEM ECONOMY — CONCEPTUAL'
+        }
+        sub={
+          opt === 'triangle' || (!showExpanded && opt !== 'nep')
+            ? 'LONG-TERM SCENARIO · SPECULATIVE FUTURE ECONOMIC ARCHITECTURE'
+            : 'EARTH · MOON · MARS · ASTEROIDS · ORBITAL INFRASTRUCTURE'
+        }
+        mission={mission}
+      />
     </>
   )
 }
@@ -780,12 +1162,16 @@ export function BeyondScene({ mission }: { mission: Mission }) {
       {i !== 2 && (
         <Stars radius={80} depth={40} count={1500} factor={2} fade speed={0} />
       )}
-      {i === 1 ? (
+      {i === 0 ? (
+        <NewWorldAnalogy mission={mission} />
+      ) : i === 1 ? (
         <MoonLogistics mission={mission} />
       ) : i === 2 ? (
         <Industry mission={mission} />
       ) : i === 3 || i === 6 ? (
         <Ideas mission={mission} />
+      ) : i === 4 ? (
+        <ResilienceScene mission={mission} />
       ) : i === 5 ? (
         <Systems mission={mission} />
       ) : i === 7 ? (
@@ -799,7 +1185,7 @@ export function BeyondScene({ mission }: { mission: Mission }) {
       ) : i === 9 ? (
         <Power mission={mission} />
       ) : (
-        <Network mission={mission} />
+        <TradeNetwork mission={mission} />
       )}
     </group>
   )
