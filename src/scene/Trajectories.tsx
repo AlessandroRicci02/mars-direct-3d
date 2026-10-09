@@ -4,7 +4,12 @@ import { Billboard, Line } from '@react-three/drei'
 import type { Line2 } from 'three-stdlib'
 import * as THREE from 'three'
 import { Label } from './SceneLabels'
-import { Spacecraft, TetherCraft, CrewHabitat } from './Spacecraft'
+import {
+  Spacecraft,
+  TetherCraft,
+  CrewHabitat,
+  HabitatDepartureStack,
+} from './Spacecraft'
 import {
   missionDays,
   transferPoint,
@@ -24,6 +29,29 @@ export function Trajectories({ mission }: { mission: Mission }) {
       Array.from({ length: 129 }, (_, i) => transferPoint(i / 128, returning)),
     [returning],
   )
+  const transferChevrons = useMemo(() => {
+    return [0.22, 0.5, 0.78].map((t) => {
+      const p = transferPoint(t, returning)
+      const pNext = transferPoint(t + 0.015, returning)
+      const tangent = pNext.clone().sub(p).normalize()
+      const normal = new THREE.Vector3(-tangent.z, 0, tangent.x)
+      const size = 0.45
+      const w1 = p
+        .clone()
+        .sub(tangent.clone().multiplyScalar(size))
+        .add(normal.clone().multiplyScalar(size * 0.4))
+      const tip = p.clone().add(tangent.clone().multiplyScalar(size * 0.35))
+      const w2 = p
+        .clone()
+        .sub(tangent.clone().multiplyScalar(size))
+        .sub(normal.clone().multiplyScalar(size * 0.4))
+      w1.y = 0.02
+      tip.y = 0.02
+      w2.y = 0.02
+      return [w1, tip, w2]
+    })
+  }, [returning])
+
   const positions = useMemo(() => new Float32Array(96), [])
   const arrival = transferPoint(1, returning)
   const visualPoint = (t: number) => {
@@ -44,7 +72,7 @@ export function Trajectories({ mission }: { mission: Mission }) {
       ) / transferDuration(mission.index)
     // Retire the prediction marker when the real planet reaches it, so the
     // arrival label does not stack over the fueled-ERV/planet annotations.
-    if(rendezvous.current) rendezvous.current.visible=t<.94
+    if (rendezvous.current) rendezvous.current.visible = t < 0.94
     ship.current.position.copy(visualPoint(t))
     if (!crew && vehicle.current)
       vehicle.current.quaternion.setFromUnitVectors(
@@ -53,10 +81,12 @@ export function Trajectories({ mission }: { mission: Mission }) {
           .sub(transferPoint(Math.max(0, t - 0.001), returning))
           .normalize(),
       )
-    if (second.current)
+    if (second.current) {
+      const t2 = Math.max(0, t - 0.05)
       second.current.position
-        .copy(visualPoint(Math.max(0, t - 0.08)))
-        .add(new THREE.Vector3(0, 1.4, 2.8))
+        .copy(visualPoint(t2))
+        .add(new THREE.Vector3(2.8, -1.2, 3.0))
+    }
     if (trail.current) {
       for (let i = 0; i < 32; i++)
         visualPoint(Math.max(0, t - 0.13 + (i / 31) * 0.13)).toArray(
@@ -79,6 +109,16 @@ export function Trajectories({ mission }: { mission: Mission }) {
         dashSize={0.2}
         gapSize={0.12}
       />
+      {transferChevrons.map((chevPoints, idx) => (
+        <Line
+          key={idx}
+          points={chevPoints}
+          color={returning ? '#a9e4ca' : '#eeb27e'}
+          lineWidth={1.3}
+          transparent
+          opacity={0.75}
+        />
+      ))}
       <group ref={rendezvous} position={arrival}>
         <mesh>
           <sphereGeometry args={[returning ? 1.2 : 0.7, 20, 12]} />
@@ -110,6 +150,10 @@ export function Trajectories({ mission }: { mission: Mission }) {
             <group scale={1.25}>
               <TetherCraft paused={mission.paused || mission.reducedMotion} />
             </group>
+          ) : mission.index === 5 ? (
+            <group scale={0.7}>
+              <HabitatDepartureStack />
+            </group>
           ) : crew ? (
             <group scale={0.55}>
               <CrewHabitat />
@@ -139,9 +183,11 @@ export function Trajectories({ mission }: { mission: Mission }) {
             <small>
               {mission.index === 6
                 ? 'HABITAT + TETHER + SPENT PROPULSION STAGE'
-                : returning
-                  ? 'CREW RETURN'
-                  : 'EARTH DEPARTURE'}
+                : mission.index === 5
+                  ? 'HABITAT WITH TMI STAGE'
+                  : returning
+                    ? 'CREW RETURN'
+                    : 'EARTH DEPARTURE'}
             </small>
           </Label>
         )}
@@ -150,9 +196,9 @@ export function Trajectories({ mission }: { mission: Mission }) {
         <group ref={second}>
           <Spacecraft scale={0.48} />
           {mission.labels && (
-            <Label position={[-3, -5, 2]}>
+            <Label position={[0, -2.6, 0]}>
               <b>ERV #2</b>
-              <small>SEPARATE · NEXT MISSION / BACKUP</small>
+              <small>PREPARING THE NEXT MISSION</small>
             </Label>
           )}
         </group>

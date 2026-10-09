@@ -94,7 +94,7 @@ export const stages: MissionStage[] = [
     description:
       'Turn Martian carbon dioxide and hydrogen brought from Earth into methane and oxygen propellant.',
     detail:
-      'A 100 kW nuclear reactor drives a Sabatier-based chemical plant and water electrolysis. Hydrogen is recycled. The return propellant is made and verified before the crew leaves Earth.',
+      'A 100 kW nuclear reactor powers compressors and the automated propellant production plant. Approximately 6 metric tonnes of liquid hydrogen brought from Earth with the ERV react with atmospheric CO2 via the Sabatier process and electrolysis. Hydrogen is recycled. Return propellant is produced and verified before the crew ever leaves Earth.',
     metric: 'ISRU',
     metricLabel: 'MAKE RETURN PROPELLANT BEFORE CREW DEPARTURE',
     time: 'BEFORE MONTH 26 · PREPARATION',
@@ -109,9 +109,9 @@ export const stages: MissionStage[] = [
     title: 'Now,',
     accent: 'the people.',
     description:
-      'With a fueled ride home waiting on Mars, a crew habitat and a second ERV depart Earth.',
+      'With a fueled ride home waiting on Mars (ERV #1), a crew habitat and a second ERV (ERV #2) depart Earth.',
     detail:
-      'ERV #1 is already fueled on Mars. ERV #2 flies separately from the crew habitat, providing backup and prepares a later expedition. Each launch window adds to the mission architecture rather than starting over.',
+      'ERV #1 is already fueled on Mars. Only after that capability is demonstrated does the crew depart. ERV #2 flies separately from the crew habitat, preparing the next mission and providing backup. The crew travels in the Habitat vehicle, launched with its Trans-Mars Injection stage.',
     metric: '26',
     metricLabel: 'MONTHS AFTER THE FIRST ERV LAUNCH',
     time: '~MONTH 26 · SECOND WINDOW',
@@ -128,7 +128,7 @@ export const stages: MissionStage[] = [
     description:
       'The crew travels to Mars in the same habitat that will become their home on the surface.',
     detail:
-      'The original concept connects the habitat to a spent rocket stage by a tether. Rotating the pair could create artificial gravity during the six-month crossing.',
+      'The crew travels in the Habitat vehicle. After trans-Mars injection, the habitat is connected to its spent booster propulsion stage by a tether. Rotating the tethered system at roughly 1 rpm produces artificial gravity during the six-month crossing.',
     metric: '~6',
     metricLabel: 'MONTHS IN THE CREW HABITAT',
     time: '~MONTHS 26–32 · CREW TRANSIT',
@@ -145,7 +145,7 @@ export const stages: MissionStage[] = [
     description:
       'The habitat lands near the fueled ERV. Four explorers begin an extended mission on the surface.',
     detail:
-      'A long stay makes room for geology, rover traverses, and experiments while Earth and Mars move toward the next return opportunity. The reactor is placed away from the living area.',
+      'The habitat lands near the waiting ERV #1. A long stay makes room for field science, rover traverses, and experiments while planets move toward the return window. The 100 kW nuclear reactor remains stationed remotely from the living area.',
     metric: '~18',
     metricLabel: 'MONTHS LIVING & WORKING ON MARS',
     time: '~MONTHS 32–50 · SURFACE MISSION',

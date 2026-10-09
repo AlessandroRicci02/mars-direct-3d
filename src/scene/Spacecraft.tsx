@@ -86,6 +86,74 @@ export function Spacecraft({
   )
 }
 
+export function SpentStage({
+  scale = 1,
+  thrust = false,
+}: {
+  scale?: number
+  thrust?: boolean
+}) {
+  return (
+    <group scale={scale}>
+      <mesh position={[0, 0, 0]} castShadow>
+        <cylinderGeometry args={[0.34, 0.34, 1.2, 16]} />
+        <meshStandardMaterial
+          color="#c2c7c9"
+          metalness={0.65}
+          roughness={0.35}
+        />
+      </mesh>
+      <mesh position={[0, 0.45, 0]}>
+        <cylinderGeometry args={[0.355, 0.355, 0.15, 16]} />
+        <meshStandardMaterial color="#889299" metalness={0.7} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, -0.45, 0]}>
+        <cylinderGeometry args={[0.355, 0.355, 0.15, 16]} />
+        <meshStandardMaterial color="#364047" metalness={0.8} roughness={0.3} />
+      </mesh>
+      <mesh position={[0, -0.85, 0]}>
+        <coneGeometry args={[0.22, 0.5, 16]} />
+        <meshStandardMaterial
+          color="#222527"
+          metalness={0.85}
+          roughness={0.25}
+        />
+      </mesh>
+      {thrust && (
+        <group position={[0, -1.35, 0]}>
+          <mesh rotation={[0, 0, Math.PI]}>
+            <coneGeometry args={[0.22, 1.6, 16]} />
+            <meshBasicMaterial
+              color="#7eccff"
+              transparent
+              opacity={0.6}
+              depthWrite={false}
+            />
+          </mesh>
+          <mesh position={[0, 0.3, 0]} rotation={[0, 0, Math.PI]}>
+            <coneGeometry args={[0.12, 1.0, 16]} />
+            <meshBasicMaterial color="#ffffff" />
+          </mesh>
+          <pointLight intensity={3} distance={4} color="#8adaff" />
+        </group>
+      )}
+    </group>
+  )
+}
+
+export function HabitatDepartureStack({ scale = 0.55 }: { scale?: number }) {
+  return (
+    <group scale={scale}>
+      <group position={[0, 0.7, 0]}>
+        <CrewHabitat />
+      </group>
+      <group position={[0, -1.1, 0]}>
+        <SpentStage scale={1.1} thrust={true} />
+      </group>
+    </group>
+  )
+}
+
 export function TetherCraft({ paused }: { paused: boolean }) {
   const group = useRef<THREE.Group>(null)
   useFrame((_, delta) => {
@@ -95,25 +163,28 @@ export function TetherCraft({ paused }: { paused: boolean }) {
     <group ref={group}>
       <Line
         points={[
-          [0, -1.5, 0],
-          [0, 1.5, 0],
+          [0, -1.8, 0],
+          [0, 1.8, 0],
         ]}
-        color="#bccbd0"
-        lineWidth={1}
+        color="#d0dde2"
+        lineWidth={1.3}
       />
-      <group position={[0, 1.5, 0]}>
-        <group scale={0.32}>
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[0.08, 12, 8]} />
+        <meshStandardMaterial
+          color="#e2a578"
+          emissive="#753e19"
+          emissiveIntensity={0.6}
+        />
+      </mesh>
+      <group position={[0, 1.8, 0]}>
+        <group scale={0.34} rotation={[0, 0, Math.PI]}>
           <CrewHabitat />
         </group>
       </group>
-      <mesh position={[0, -1.65, 0]}>
-        <cylinderGeometry args={[0.14, 0.14, 0.55, 12]} />
-        <meshStandardMaterial
-          color="#aab0b1"
-          metalness={0.65}
-          roughness={0.4}
-        />
-      </mesh>
+      <group position={[0, -1.8, 0]}>
+        <SpentStage scale={0.46} />
+      </group>
     </group>
   )
 }

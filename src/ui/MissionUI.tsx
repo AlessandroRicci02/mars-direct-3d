@@ -63,6 +63,7 @@ function ChapterProgress({ mission }: { mission: Mission }) {
 
 function FuelProcess({ mission }: { mission: Mission }) {
   const [percent, setPercent] = useState(0)
+  const [variant, setVariant] = useState<'original' | 'future'>('original')
   useEffect(() => {
     const timer = setInterval(
       () =>
@@ -81,27 +82,35 @@ function FuelProcess({ mission }: { mission: Mission }) {
           ? 'RETURN READY · CREW CLEARED'
           : 'FUEL FIRST · CREW WAITS ON EARTH'}
       </div>
-      <div className="chemistry">
-        <span>
-          CO<sub>2</sub>
-          <small>MARS AIR</small>
-        </span>
-        <i>+</i>
-        <span>
-          H<sub>2</sub>
-          <small>~6 t FROM EARTH</small>
-        </span>
-        <ArrowRight size={19} />
-        <span>
-          CH<sub>4</sub>
-          <small>METHANE</small>
-        </span>
-        <i>+</i>
-        <span>
-          O<sub>2</sub>
-          <small>OXYGEN</small>
-        </span>
+
+      <div className="isru-diagram">
+        <div className="isru-branch-row">
+          <div className="isru-node-card">
+            <span className="isru-source-tag">EARTH</span>
+            <span className="isru-flow-arrow">↓</span>
+            <span className="isru-subtext">~6 t H₂ transported with ERV</span>
+          </div>
+          <div className="isru-plus">+</div>
+          <div className="isru-node-card">
+            <span className="isru-source-tag">MARS ATMOSPHERE</span>
+            <span className="isru-flow-arrow">↓</span>
+            <span className="isru-subtext">CO₂</span>
+          </div>
+        </div>
+
+        <div className="isru-flow-arrow central">↓</div>
+
+        <div className="isru-core-card">
+          <div className="isru-core-title">H₂ + CO₂</div>
+          <div className="isru-flow-arrow">↓</div>
+          <div className="isru-plant-label">ISRU PROCESS · 100 kW REACTOR</div>
+          <div className="isru-flow-arrow">↓</div>
+          <div className="isru-chem-output">CH₄ + O₂</div>
+          <div className="isru-flow-arrow">↓</div>
+          <div className="isru-dest-label">RETURN PROPELLANT</div>
+        </div>
       </div>
+
       <div className="fuel-caption">
         <span>
           {percent === 100
@@ -122,8 +131,25 @@ function FuelProcess({ mission }: { mission: Mission }) {
           'Crew waits on Earth until the return propellant is ready.'
         )}
       </p>
+
+      <div className="isru-variant-bar">
+        <button
+          className={`isru-variant-pill ${variant === 'original' ? 'active' : ''}`}
+          onClick={() => setVariant('original')}
+        >
+          Original Mars Direct
+        </button>
+        <button
+          className={`isru-variant-pill ${variant === 'future' ? 'active' : ''}`}
+          onClick={() => setVariant('future')}
+        >
+          Future/local-water variant
+        </button>
+      </div>
       <small className="process-note">
-        100 kW reactor · ~6 t imported H₂ · hydrogen recycling
+        {variant === 'original'
+          ? '100 kW nuclear reactor · ~6 t H₂ imported from Earth with ERV · Sabatier + water electrolysis · hydrogen recycled.'
+          : 'Later ISRU concepts can obtain hydrogen from Martian water ice, reducing or eliminating the need to transport it from Earth.'}
       </small>
     </div>
   )
@@ -358,8 +384,10 @@ export default function MissionUI({ mission }: { mission: Mission }) {
       {beyond && <BeyondControls mission={mission} />}
       {!beyond && (index === 2 || index === 6) && (
         <aside className="transfer-note">
-          Follow a solar orbit to meet Mars where it will be later.
-          <small>Accelerated time · illustrative transfer</small>
+          Interplanetary spacecraft do not fly toward where Mars is when they
+          leave Earth. They follow an orbit around the Sun designed to meet Mars
+          later.
+          <small>Visualization not to scale · accelerated time</small>
         </aside>
       )}
       <div className="scene-tools">

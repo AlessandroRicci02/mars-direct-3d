@@ -257,9 +257,9 @@ function MoonLogistics({ mission }: { mission: Mission }) {
 }
 const industryNames = [
   'DEPENDENT OUTPOST',
-  'LOCAL RESOURCES',
+  'LOCAL PRODUCTION',
   'INDUSTRIAL SETTLEMENT',
-  'PARTIAL SELF-SUFFICIENCY',
+  'PARTIALLY SELF-SUFFICIENT ECONOMY',
 ]
 function Industry({ mission }: { mission: Mission }) {
   const level =
@@ -360,8 +360,8 @@ function Industry({ mission }: { mission: Mission }) {
 function Systems({ mission }: { mission: Mission }) {
   const material = mission.option === 'materials'
   const names = material
-    ? ['RAW MATERIAL', 'PRODUCTION', 'USE & REPAIR', 'RECYCLE']
-    : ['MAKE-UP WATER', 'USE', 'RECOVERY', 'PURIFICATION']
+    ? ['MATERIAL', 'PRODUCT', 'REPAIR', 'RECYCLE']
+    : ['WATER', 'HUMAN USE', 'RECOVERY', 'PURIFICATION']
   const nodes: P[] = [
     [0, 0, 0],
     [5, 0, -3],
@@ -732,11 +732,29 @@ function Network({ mission }: { mission: Mission }) {
         )}
       </group>
       {resilience && (
-        <Caption
-          at={[5, 2, 0]}
-          title="SUPPLY CHAIN ≠ INDEPENDENCE"
-          mission={mission}
-        />
+        <>
+          <group position={[0, 0, 1]}>
+            <Station at={[0.8, 1.6, 0.4]} kind="power" scale={0.12} />
+            <mesh position={[1.2, 1.4, 0.2]}>
+              <sphereGeometry args={[0.07, 8, 8]} />
+              <meshBasicMaterial color="#a9e4ca" />
+            </mesh>
+          </group>
+          <group position={[10, 0, 0]}>
+            <Station at={[0.4, 0.9, 0.2]} kind="power" scale={0.12} />
+            <Station at={[-0.4, 0.8, -0.3]} kind="habitat" scale={0.14} />
+            <mesh position={[0.5, 0.8, 0.1]}>
+              <sphereGeometry args={[0.06, 8, 8]} />
+              <meshBasicMaterial color="#eeb27e" />
+            </mesh>
+          </group>
+          <Caption
+            at={[5, 2, 0]}
+            title="ONE PLANET → TWO WORLDS"
+            sub="DEPENDENT INITIALLY · INDEPENDENT CAPACITY OVER VERY LONG TIMESCALES"
+            mission={mission}
+          />
+        </>
       )}
     </>
   )

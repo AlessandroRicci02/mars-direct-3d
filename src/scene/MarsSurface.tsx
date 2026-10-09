@@ -1,4 +1,4 @@
-﻿import { useRef } from 'react'
+import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import * as THREE from 'three'
@@ -200,13 +200,13 @@ function PropellantPlant({ mission }: { mission: Mission }) {
           />
           {mission.labels && (
             <>
-              <Label position={[-1.7, 2.8, -1.8]} color="blue">
-                <b>CO₂ · ATMOSPHERE</b>
+              <Label position={[-1.8, 3.2, -1.8]} color="blue">
+                <b>CO₂ · MARS ATMOSPHERE</b>
               </Label>
-              <Label position={[-0.4, 1.25, -3.1]} color="neutral">
+              <Label position={[-0.4, 1.35, -3.4]} color="neutral">
                 <b>~6 t H₂ · FROM EARTH</b>
               </Label>
-              <Label position={[2.2, 1.7, 1]} color="green">
+              <Label position={[2.2, 1.9, 1.2]} color="green">
                 <b>CH₄ + O₂</b>
                 <small>RETURN PROPELLANT</small>
               </Label>
@@ -321,11 +321,11 @@ export function MarsSurface({ mission }: { mission: Mission }) {
           <PropellantPlant mission={mission} />
           {labels && (
             <>
-              <Label position={[-4, 2.2, -13]} color="neutral">
+              <Label position={[-4, 2.4, -13]} color="neutral">
                 <b>100 kW NUCLEAR REACTOR</b>
-                <small>REMOTE FROM LIVING AREA</small>
+                <small>HISTORICAL MARS DIRECT · REMOTE POWER SOURCE</small>
               </Label>
-              <Label position={[-2.5, 2, -2]} color="green">
+              <Label position={[1, 2.5, -1.8]} color="green">
                 <b>ISRU PLANT</b>
                 <small>LOCAL RESOURCES → PROPELLANT</small>
               </Label>

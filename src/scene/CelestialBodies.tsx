@@ -199,14 +199,54 @@ function Orbit({
       }),
     [radius],
   )
+  const chevrons = useMemo(() => {
+    return [0.4, 1.9, 3.5, 5.1].map((a) => {
+      const cx = SUN.x + Math.cos(a) * radius
+      const cz = SUN.z + Math.sin(a) * radius
+      const tx = -Math.sin(a)
+      const tz = Math.cos(a)
+      const nx = Math.cos(a)
+      const nz = Math.sin(a)
+      const size = 0.42
+      const w1 = new THREE.Vector3(
+        cx - tx * size + nx * (size * 0.45),
+        -0.05,
+        cz - tz * size + nz * (size * 0.45),
+      )
+      const tip = new THREE.Vector3(
+        cx + tx * (size * 0.35),
+        -0.05,
+        cz + tz * (size * 0.35),
+      )
+      const w2 = new THREE.Vector3(
+        cx - tx * size - nx * (size * 0.45),
+        -0.05,
+        cz - tz * size - nz * (size * 0.45),
+      )
+      return [w1, tip, w2]
+    })
+  }, [radius])
+
   return (
-    <Line
-      points={points}
-      color={color}
-      transparent
-      opacity={opacity}
-      lineWidth={0.85}
-    />
+    <group>
+      <Line
+        points={points}
+        color={color}
+        transparent
+        opacity={opacity}
+        lineWidth={0.85}
+      />
+      {chevrons.map((chevPoints, idx) => (
+        <Line
+          key={idx}
+          points={chevPoints}
+          color={color}
+          transparent
+          opacity={opacity * 0.85}
+          lineWidth={1.2}
+        />
+      ))}
+    </group>
   )
 }
 
@@ -263,8 +303,8 @@ function OrbitingPlanet({
         <>
           {mission.labels && (
             <Label position={[0, 2.2, 0]} color="green">
-              <b>ERV #1 · FUELED ON MARS</b>
-              <small>RETURN READY BEFORE CREW DEPARTURE</small>
+              <b>ERV #1 — FUELED ON MARS</b>
+              <small>RETURN READY BEFORE CREW DEPARTS</small>
             </Label>
           )}
           <mesh position={[0, radius + 0.13, 0]}>

@@ -4,15 +4,17 @@ An interactive educational 3D experience with two distinct parts: **Mars Direct 
 
 # How to run the website
 
-1. Install Node.js from https://nodejs.org if it is not installed. Supported versions include Node 20.19+, 22.12+ and newer; this project was validated with Node 24. Node includes npm.
-2. Open **Windows PowerShell**.
-3. Navigate to this project:
+Step-by-step for Windows PowerShell:
+
+1. Install Node.js if it is not already installed (from https://nodejs.org). Supported versions include Node 20.19+, 22.12+ and newer; validated with Node 24.
+2. Open PowerShell.
+3. Navigate to the project:
 
    ```powershell
    cd C:\Users\aleri\mars-direct-3d
    ```
 
-4. Install dependencies on first use, or after dependencies change:
+4. Install dependencies if needed:
 
    ```powershell
    npm install
@@ -24,10 +26,13 @@ An interactive educational 3D experience with two distinct parts: **Mars Direct 
    npm run dev
    ```
 
-6. Keep PowerShell open. Open the **Local** URL printed by Vite in your browser, normally **http://localhost:5173**. If that port is busy, use the different URL Vite prints.
-7. To stop the server, return to PowerShell and press **Ctrl+C**.
+6. Open the Local URL printed by Vite, normally:
 
-If PowerShell blocks `npm.ps1`, use `npm.cmd install` and `npm.cmd run dev` instead.
+   http://localhost:5173
+
+7. To stop the server:
+
+   Ctrl+C
 
 ## Production validation
 
