@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import {
   ArrowLeft,
   ArrowRight,
@@ -7,6 +7,8 @@ import {
   ChevronRight,
   CircleHelp,
   Crosshair,
+  Expand,
+  PanelsTopLeft,
   Maximize2,
   Mouse,
   Pause,
@@ -44,6 +46,16 @@ function Mark() {
 
 function ChapterProgress({ mission }: { mission: Mission }) {
   const line = useRef<HTMLDivElement>(null)
+  useLayoutEffect(() => {
+    if (line.current)
+      line.current.style.transform = `scaleX(${mission.progress.current})`
+  }, [
+    mission.paused,
+    mission.resetKey,
+    mission.index,
+    mission.section,
+    mission.progress,
+  ])
   useEffect(() => {
     let frame: number
     const tick = () => {
@@ -83,32 +95,26 @@ function FuelProcess({ mission }: { mission: Mission }) {
           : 'FUEL FIRST · CREW WAITS ON EARTH'}
       </div>
 
-      <div className="isru-diagram">
-        <div className="isru-branch-row">
-          <div className="isru-node-card">
-            <span className="isru-source-tag">EARTH</span>
-            <span className="isru-flow-arrow">↓</span>
-            <span className="isru-subtext">~6 t H₂ transported with ERV</span>
-          </div>
-          <div className="isru-plus">+</div>
-          <div className="isru-node-card">
-            <span className="isru-source-tag">MARS ATMOSPHERE</span>
-            <span className="isru-flow-arrow">↓</span>
-            <span className="isru-subtext">CO₂</span>
-          </div>
+      <div className="isru-summary">
+        <span className="isru-baseline">
+          ORIGINAL MARS DIRECT / PLANT ON MARS
+        </span>
+        <div className="process-inputs">
+          <span>
+            <b>CO₂</b>Mars atmosphere
+          </span>
+          <i>+</i>
+          <span>
+            <b>H₂</b>~6 t from Earth
+          </span>
+          <ArrowRight size={21} />
+          <span>
+            <b>CH₄ + O₂</b>Return propellant
+          </span>
         </div>
-
-        <div className="isru-flow-arrow central">↓</div>
-
-        <div className="isru-core-card">
-          <div className="isru-core-title">H₂ + CO₂</div>
-          <div className="isru-flow-arrow">↓</div>
-          <div className="isru-plant-label">ISRU PROCESS · 100 kW REACTOR</div>
-          <div className="isru-flow-arrow">↓</div>
-          <div className="isru-chem-output">CH₄ + O₂</div>
-          <div className="isru-flow-arrow">↓</div>
-          <div className="isru-dest-label">RETURN PROPELLANT</div>
-        </div>
+        <span className="process-power">
+          100 kW NUCLEAR REACTOR <i>·</i> SABATIER + ELECTROLYSIS
+        </span>
       </div>
 
       <div className="fuel-caption">
@@ -135,12 +141,14 @@ function FuelProcess({ mission }: { mission: Mission }) {
       <div className="isru-variant-bar">
         <button
           className={`isru-variant-pill ${variant === 'original' ? 'active' : ''}`}
+          aria-pressed={variant === 'original'}
           onClick={() => setVariant('original')}
         >
           Original Mars Direct
         </button>
         <button
           className={`isru-variant-pill ${variant === 'future' ? 'active' : ''}`}
+          aria-pressed={variant === 'future'}
           onClick={() => setVariant('future')}
         >
           Future/local-water variant
@@ -149,7 +157,7 @@ function FuelProcess({ mission }: { mission: Mission }) {
       <small className="process-note">
         {variant === 'original'
           ? '100 kW nuclear reactor · ~6 t H₂ imported from Earth with ERV · Sabatier + water electrolysis · hydrogen recycled.'
-          : 'Later ISRU concepts can obtain hydrogen from Martian water ice, reducing or eliminating the need to transport it from Earth.'}
+          : 'Optional later concept: hydrogen from Martian ice could reduce imports. The 3D plant above continues to show the original imported-hydrogen architecture.'}
       </small>
     </div>
   )
@@ -169,6 +177,18 @@ export default function MissionUI({ mission }: { mission: Mission }) {
     replay,
   } = mission
   const beyond = mission.section === 'beyond'
+  const focusButton = useRef<HTMLButtonElement>(null)
+  const previousFocus = useRef(false)
+  const readingScroll = useRef(0)
+  useLayoutEffect(() => {
+    if (previousFocus.current === mission.focus3d) return
+    previousFocus.current = mission.focus3d
+    if (mission.focus3d) {
+      readingScroll.current = window.scrollY
+      window.scrollTo({ top: 0, behavior: 'instant' })
+    } else window.scrollTo({ top: readingScroll.current, behavior: 'instant' })
+    focusButton.current?.focus({ preventScroll: true })
+  }, [mission.focus3d])
   const chapters = mission.chapters
   const [modal, setModal] = useState<'architecture' | 'about' | 'notes' | null>(
     null,
@@ -190,12 +210,29 @@ export default function MissionUI({ mission }: { mission: Mission }) {
   }, [modal])
   const activeStep = useRef<HTMLButtonElement>(null)
   useEffect(() => {
-    activeStep.current?.scrollIntoView({
-      block: 'nearest',
-      inline: 'nearest',
-      behavior: 'smooth',
-    })
-  }, [index])
+    if (mission.focus3d) return
+    const active = activeStep.current
+    const timeline = active?.parentElement
+    if (!active || !timeline) return
+    const reveal = () => {
+      const step = active.getBoundingClientRect()
+      const track = timeline.getBoundingClientRect()
+      // Scroll only the timeline. Never move the reading viewport on resize
+      // or while returning from Focus 3D.
+      timeline.scrollTo({
+        left:
+          timeline.scrollLeft +
+          step.left -
+          track.left -
+          (track.width - step.width) / 2,
+        behavior: 'instant',
+      })
+    }
+    reveal()
+    const observer = new ResizeObserver(reveal)
+    observer.observe(timeline)
+    return () => observer.disconnect()
+  }, [index, mission.section, mission.focus3d])
   const [fullscreen, setFullscreen] = useState(false)
   useEffect(() => {
     const change = () => setFullscreen(!!document.fullscreenElement)
@@ -212,183 +249,228 @@ export default function MissionUI({ mission }: { mission: Mission }) {
   }
   return (
     <>
-      <div className="scene-vignette" />
-      <header className="site-header">
-        <button
-          className="brand"
-          onClick={() => mission.goToSection('mission')}
-          aria-label="Mars Direct home"
-        >
-          <Mark />
-          <span>
-            MARS DIRECT<small>THE ROAD TO MARS</small>
-          </span>
-        </button>
-        <nav aria-label="Main navigation">
+      <div className="presentation-layer" inert={mission.focus3d}>
+        <div className="scene-vignette" />
+        <header className="site-header">
           <button
-            className={!beyond ? 'nav-active' : ''}
+            className="brand"
             onClick={() => mission.goToSection('mission')}
+            aria-label="Mars Direct home"
           >
-            The mission
+            <Mark />
+            <span>
+              MARS DIRECT<small>THE ROAD TO MARS</small>
+            </span>
           </button>
-          <button onClick={() => openModal('architecture')}>
-            The architecture <ArrowUpRight size={12} />
+          <nav aria-label="Main navigation">
+            <button
+              className={!beyond ? 'nav-active' : ''}
+              onClick={() => mission.goToSection('mission')}
+            >
+              The mission
+            </button>
+            <button onClick={() => openModal('architecture')}>
+              The architecture <ArrowUpRight size={12} />
+            </button>
+            <button
+              className={beyond ? 'nav-active' : ''}
+              onClick={() => mission.goToSection('beyond')}
+            >
+              Beyond Mars
+            </button>
+            <button onClick={() => openModal('about')}>
+              About <ArrowUpRight size={12} />
+            </button>
+          </nav>
+          <div className="header-tag">
+            <span className="status-dot" /> AN INTERACTIVE EXPEDITION
+          </div>
+        </header>
+
+        <main
+          className={`story ${index === 0 ? 'intro-story' : 'chapter-story'}`}
+          key={`${mission.section}-${stage.id}`}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          <div className="eyebrow">
+            <span />
+            {stage.eyebrow}
+          </div>
+          <span className="epistemic-tag">
+            {stage.status || 'HISTORICAL MARS DIRECT · PROPOSED'}
+          </span>
+          <h1>
+            <span>{stage.title}</span>
+            <em>{stage.accent}</em>
+          </h1>
+          <p className="description">{stage.description}</p>
+          {!beyond && index === 0 && (
+            <p className="intro-credit">
+              Robert Zubrin’s vision. Your journey begins here.
+            </p>
+          )}
+          <button className="notes-button" onClick={() => openModal('notes')}>
+            <CircleHelp size={14} />{' '}
+            {!beyond && index === 0
+              ? 'The idea behind Mars Direct'
+              : 'Inside this chapter'}
+            <ChevronRight size={13} />
           </button>
+          <div className="story-actions">
+            {(index > 0 || beyond) && (
+              <button
+                className="back-button"
+                onClick={() => goTo(index - 1)}
+                aria-label="Previous chapter"
+              >
+                <ArrowLeft size={18} />
+              </button>
+            )}
+            <button
+              className="primary-button"
+              onClick={() => {
+                if (beyond && index === chapters.length - 1)
+                  mission.goToSection('mission')
+                else goTo(index + 1)
+              }}
+            >
+              {beyond
+                ? index === 10
+                  ? 'Return to the mission'
+                  : 'Next chapter'
+                : index === 0
+                  ? 'Begin the journey'
+                  : index === 9
+                    ? 'Continue beyond Mars'
+                    : 'Next chapter'}
+              <ArrowRight size={18} />
+            </button>
+            {!beyond && index === 0 && (
+              <span className="journey-length">
+                10 CHAPTERS
+                <br />
+                <b>~3 MIN EXPLORATION</b>
+              </span>
+            )}
+          </div>
+          {index !== 0 && (
+            <div className="chapter-stat">
+              <strong>{stage.metric}</strong>
+              <span>{stage.metricLabel}</span>
+            </div>
+          )}
+        </main>
+
+        <aside className="view-indicator">
+          <span className="target-icon">
+            <Crosshair size={16} />
+          </span>
+          <div>
+            {stage.location}
+            <small>{stage.time}</small>
+          </div>
+          <span className="view-live">LIVE 3D</span>
+        </aside>
+        {stage.mode === 'solar' && (
+          <div className="scene-legend" aria-label="Orbital line legend">
+            <span>
+              <i className="orbit-key earth-key" /> Earth orbit
+            </span>
+            <span>
+              <i className="orbit-key mars-key" /> Mars orbit
+            </span>
+            {index > 0 && (
+              <span>
+                <i
+                  className={`transfer-key ${index === 8 ? 'return-key' : ''}`}
+                />{' '}
+                {index === 8 ? 'Earth return' : 'Mission transfer'}
+              </span>
+            )}
+          </div>
+        )}
+        {!beyond && index === 0 && (
+          <aside className="principle-card">
+            <span>THE GUIDING PRINCIPLE</span>
+            <p>
+              Travel light.
+              <br />
+              Think ahead.
+              <br />
+              <em>Live off the land.</em>
+            </p>
+            <div>
+              <span className="tiny-line" /> MARS DIRECT / EST. 1990
+            </div>
+          </aside>
+        )}
+        {!beyond && index === 4 && (
+          <FuelProcess key={mission.resetKey} mission={mission} />
+        )}
+        {!beyond && index === 9 && (
+          <aside className="repeat-card">
+            <span className="status-dot" />
+            <span>
+              ONE ARCHITECTURE.
+              <br />
+              <strong>COUNTLESS POSSIBILITIES.</strong>
+            </span>
+          </aside>
+        )}
+
+        {beyond && <BeyondControls mission={mission} />}
+        {!beyond && (index === 2 || index === 6) && (
+          <aside className="transfer-note">
+            Interplanetary spacecraft do not fly toward where Mars is when they
+            leave Earth. They follow an orbit around the Sun designed to meet
+            Mars later.
+            <small>Visualization not to scale · accelerated time</small>
+          </aside>
+        )}
+      </div>
+      <button
+        ref={focusButton}
+        className="focus-toggle"
+        aria-pressed={mission.focus3d}
+        aria-label={
+          mission.focus3d ? 'Show interface' : 'Focus 3D: hide interface'
+        }
+        title={
+          mission.focus3d
+            ? 'Show interface (H or Escape)'
+            : 'Hide texts and panels (H)'
+        }
+        onClick={() => mission.setFocus3d(!mission.focus3d)}
+      >
+        {mission.focus3d ? <PanelsTopLeft size={15} /> : <Expand size={15} />}
+        <span>{mission.focus3d ? 'Show interface' : 'Focus 3D'}</span>
+        <kbd>H</kbd>
+      </button>
+      {mission.focus3d && (
+        <nav className="focus-navigation" aria-label="Focus chapter navigation">
           <button
-            className={beyond ? 'nav-active' : ''}
-            onClick={() => mission.goToSection('beyond')}
+            aria-label="Previous chapter"
+            disabled={!beyond && index === 0}
+            onClick={() => goTo(index - 1)}
           >
-            Beyond Mars
+            <ArrowLeft size={17} />
           </button>
-          <button onClick={() => openModal('about')}>
-            About <ArrowUpRight size={12} />
+          <span>
+            <small>
+              {beyond ? 'BEYOND MARS' : 'THE MISSION'} /{' '}
+              {String(index + 1).padStart(2, '0')}
+            </small>
+            {stage.short}
+          </span>
+          <button
+            aria-label="Next chapter"
+            disabled={beyond && index === chapters.length - 1}
+            onClick={() => goTo(index + 1)}
+          >
+            <ArrowRight size={17} />
           </button>
         </nav>
-        <div className="header-tag">
-          <span className="status-dot" /> AN INTERACTIVE EXPEDITION
-        </div>
-      </header>
-
-      <main
-        className={`story ${index === 0 ? 'intro-story' : 'chapter-story'}`}
-        key={`${mission.section}-${stage.id}`}
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        <div className="eyebrow">
-          <span />
-          {stage.eyebrow}
-        </div>
-        <span className="epistemic-tag">
-          {stage.status || 'HISTORICAL MARS DIRECT · PROPOSED'}
-        </span>
-        <h1>
-          <span>{stage.title}</span>
-          <em>{stage.accent}</em>
-        </h1>
-        <p className="description">{stage.description}</p>
-        {!beyond && index === 0 && (
-          <p className="intro-credit">
-            Robert Zubrin’s vision. Your journey begins here.
-          </p>
-        )}
-        <button className="notes-button" onClick={() => openModal('notes')}>
-          <CircleHelp size={14} />{' '}
-          {!beyond && index === 0
-            ? 'The idea behind Mars Direct'
-            : 'Inside this chapter'}
-          <ChevronRight size={13} />
-        </button>
-        <div className="story-actions">
-          {(index > 0 || beyond) && (
-            <button
-              className="back-button"
-              onClick={() => goTo(index - 1)}
-              aria-label="Previous chapter"
-            >
-              <ArrowLeft size={18} />
-            </button>
-          )}
-          <button
-            className="primary-button"
-            onClick={() => {
-              if (beyond && index === chapters.length - 1)
-                mission.goToSection('mission')
-              else goTo(index + 1)
-            }}
-          >
-            {beyond
-              ? index === 10
-                ? 'Return to the mission'
-                : 'Next chapter'
-              : index === 0
-                ? 'Begin the journey'
-                : index === 9
-                  ? 'Continue beyond Mars'
-                  : 'Next chapter'}
-            {index === 9 ? <RotateCcw size={17} /> : <ArrowRight size={18} />}
-          </button>
-          {!beyond && index === 0 && (
-            <span className="journey-length">
-              10 CHAPTERS
-              <br />
-              <b>~3 MIN EXPLORATION</b>
-            </span>
-          )}
-        </div>
-        {index !== 0 && (
-          <div className="chapter-stat">
-            <strong>{stage.metric}</strong>
-            <span>{stage.metricLabel}</span>
-          </div>
-        )}
-      </main>
-
-      <aside className="view-indicator">
-        <span className="target-icon">
-          <Crosshair size={16} />
-        </span>
-        <div>
-          {stage.location}
-          <small>{stage.time}</small>
-        </div>
-        <span className="view-live">LIVE 3D</span>
-      </aside>
-      {stage.mode === 'solar' && (
-        <div className="scene-legend" aria-label="Orbital line legend">
-          <span>
-            <i className="orbit-key earth-key" /> Earth orbit
-          </span>
-          <span>
-            <i className="orbit-key mars-key" /> Mars orbit
-          </span>
-          {index > 0 && (
-            <span>
-              <i
-                className={`transfer-key ${index === 8 ? 'return-key' : ''}`}
-              />{' '}
-              {index === 8 ? 'Earth return' : 'Mission transfer'}
-            </span>
-          )}
-        </div>
-      )}
-      {!beyond && index === 0 && (
-        <aside className="principle-card">
-          <span>THE GUIDING PRINCIPLE</span>
-          <p>
-            Travel light.
-            <br />
-            Think ahead.
-            <br />
-            <em>Live off the land.</em>
-          </p>
-          <div>
-            <span className="tiny-line" /> MARS DIRECT / EST. 1990
-          </div>
-        </aside>
-      )}
-      {!beyond && index === 4 && (
-        <FuelProcess key={mission.resetKey} mission={mission} />
-      )}
-      {!beyond && index === 9 && (
-        <aside className="repeat-card">
-          <span className="status-dot" />
-          <span>
-            ONE ARCHITECTURE.
-            <br />
-            <strong>COUNTLESS POSSIBILITIES.</strong>
-          </span>
-        </aside>
-      )}
-
-      {beyond && <BeyondControls mission={mission} />}
-      {!beyond && (index === 2 || index === 6) && (
-        <aside className="transfer-note">
-          Interplanetary spacecraft do not fly toward where Mars is when they
-          leave Earth. They follow an orbit around the Sun designed to meet Mars
-          later.
-          <small>Visualization not to scale · accelerated time</small>
-        </aside>
       )}
       <div className="scene-tools">
         <span className="orbit-hint">
@@ -432,7 +514,10 @@ export default function MissionUI({ mission }: { mission: Mission }) {
         </div>
       </div>
 
-      <footer className="mission-footer">
+      <footer
+        className="mission-footer presentation-layer"
+        inert={mission.focus3d}
+      >
         <div className="timeline-heading">
           <div>
             <span className="timeline-caption">
@@ -621,7 +706,9 @@ export default function MissionUI({ mission }: { mission: Mission }) {
                 Use the chapter timeline or arrow keys to explore. Drag the
                 scene to change your view. Pause, replay, hide labels, or let
                 Autoplay guide you through both parts: 10 mission chapters and
-                11 Beyond Mars chapters.
+                11 Beyond Mars chapters. Select Focus 3D (H) to hide the
+                interface; press H or Escape to restore it. Labels can be
+                enabled separately in Focus 3D.
               </p>
               <div className="note-callout">
                 A concept, <span>not a scheduled mission.</span>

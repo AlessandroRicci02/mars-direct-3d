@@ -1,6 +1,6 @@
 # Mars Direct — The Road to Mars
 
-An interactive educational 3D experience with two distinct parts: **Mars Direct — How we get there** (10 chapters) and **Beyond Mars Direct — Why build a spacefaring civilization?** (11 chapters). The original orange/dark visual identity and chapter timeline are preserved.
+An interactive educational 3D experience with two distinct parts: **Mars Direct — How we get there** (10 chapters) and **Beyond Mars Direct — Why build a spacefaring civilization?** (11 chapters). The original orange/dark identity and timeline remain, with a SpaceX-inspired presentation: bold uppercase titles, restrained navigation, outlined actions and more space for the scenes. No SpaceX branding or imagery is used.
 
 # How to run the website
 
@@ -54,30 +54,46 @@ Choose **The mission** or **Beyond Mars** in the top navigation. The last Mars D
 
 Drag the scene to orbit, pause with the pause button or Space, toggle labels, replay a chapter, or enable Autoplay. Opening chapter notes pauses playback. Autoplay traverses both parts and stops at the end. Background tabs stop advancing time. Camera transitions use eased paths and are interrupted by another selection. Reduced-motion preferences disable cinematic camera flights and decorative motion.
 
-Part II offers crew/cargo route emphasis, the New World historical analogy (oceanic expedition to routine network with moral caveats), four Mars development stages and seven industrial progression phases, water/material loops, chemical/NTP/NEP propulsion comparison, Mars/lunar/vehicle power systems, asteroid in-space resources, and Robert Zubrin's interplanetary trade triangle expanded into an extended solar-system economy. Longer explanations and sources live in chapter notes and About.
+**Focus 3D** (or **H**) clears titles, panels, header and timeline and smoothly centers the scene. Pause, replay, labels and chapter navigation remain available. **H**, **Escape** or **Show interface** restores the reading view without restarting the scene. Focus labels have a separate preference; hidden interface controls are inert. On a phone, Focus fills the viewport instead of retaining the taller reading layout.
+
+In **Propulsion**, all vehicles share one departure clock: NTP arrives first, chemical second and NEP last, with progress trails and arrival readouts. Vehicles hold at the destination until replay. This is an illustrative mission, not calculated flight times or a universal ranking of propulsion systems. Reduced motion shows a static comparison with the same ordering.
+
+In **AI & robots**, choose cargo handling, equipment maintenance or human possibilities. Articulated humanoid concept models demonstrate the first two tasks; the third returns to the wider question of science, culture and human purpose. A small helper robot also appears at the manufacturing stage of Mars industry. The worksite is a future concept under human supervision, not an existing Mars deployment; NASA Valkyrie research is linked in the notes.
+
+Part II offers crew/cargo route emphasis, a selectable New World historical analogy, seven visible industrial development steps, water/material loops with make-up inputs and losses, chemical/NTP/NEP comparison, and distinct Mars/lunar/vehicle power systems. The final network progressively adds logistics, resources, surface power and industry; it stays complete until replay. Filters emphasize solid warm chemical routes, dashed green NTP routes or dotted blue NEP freight routes. The proposed historical trade triangle is a separate optional view. Longer explanations and sources live in chapter notes and About.
 
 ## Where the code lives
 
-| File                             | Purpose                                                                                                |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------ |
-| `src/data/mission.ts`            | Original ten chapters, copy, timing and scene modes                                                    |
-| `src/data/beyond.ts`             | Eleven future-facing chapters, epistemic labels and sources                                            |
-| `src/data/solarSystem.ts`        | Planet dimensions, orbital radii and collision bounds                                                  |
-| `src/data/orbitalMotion.ts`      | Accelerated circular orbits and illustrative solar transfer ellipse                                    |
-| `src/hooks/useMission.ts`        | Two-part navigation, progress, clock, pause, replay and options                                        |
-| `src/scene/MissionScene.tsx`     | Shared Canvas and scene selection                                                                      |
-| `src/scene/CelestialBodies.tsx`  | Textured planets, atmosphere, Sun, illumination and moving labels                                      |
-| `src/scene/Trajectories.tsx`     | Transfer marker, vehicle motion and future rendezvous                                                  |
-| `src/scene/Spacecraft.tsx`       | ERV, shared crew habitat, rotating tether and astronauts                                               |
-| `src/scene/MarsSurface.tsx`      | Landing, ISRU particles, filling tanks, reactor, rover and base                                        |
-| `src/scene/SurfaceTerrain.tsx`   | Lightweight terrain, horizon and instanced rocks                                                       |
-| `src/scene/BeyondScene.tsx`      | New World analogy, lunar routes, industry, loops, asteroids, propulsion, surface power, trade triangle |
-| `src/scene/CameraController.tsx` | GSAP easing, responsive framing and bounded orbit controls                                             |
-| `src/scene/SceneLabels.tsx`      | DOM labels projected from 3D anchors                                                                   |
-| `src/ui/MissionUI.tsx`           | Existing visual interface, timeline, ISRU callout, epistemic notes and modal                           |
-| `src/ui/BeyondControls.tsx`      | Compact chapter interactions, analogy banners, trade triangle and explanations                         |
-| `src/styles.css`                 | Responsive styling                                                                                     |
-| `public/textures/`               | Local planet maps, attribution and license                                                             |
+| File                                 | Purpose                                                                                                |
+| ------------------------------------ | ------------------------------------------------------------------------------------------------------ |
+| `src/data/mission.ts`                | Original ten chapters, copy, timing and scene modes                                                    |
+| `src/data/beyond.ts`                 | Eleven future-facing chapters, epistemic labels and sources                                            |
+| `src/data/development.ts`            | Seven industrial steps and six final-network development phases                                        |
+| `src/data/propulsion.ts`             | Shared illustrative departure clock, separate arrival times and reduced-motion snapshot                |
+| `src/data/solarSystem.ts`            | Planet dimensions, orbital radii and collision bounds                                                  |
+| `src/data/orbitalMotion.ts`          | Accelerated circular orbits and illustrative solar transfer ellipse                                    |
+| `src/hooks/useMission.ts`            | Two-part navigation, progress, clock, pause, replay and options                                        |
+| `src/scene/MissionScene.tsx`         | Shared Canvas and scene selection                                                                      |
+| `src/scene/CelestialBodies.tsx`      | Textured planets, atmosphere, Sun, illumination and moving labels                                      |
+| `src/scene/Trajectories.tsx`         | Transfer marker, vehicle motion and future rendezvous                                                  |
+| `src/scene/Spacecraft.tsx`           | ERV, shared crew habitat, rotating tether and astronauts                                               |
+| `src/scene/MarsSurface.tsx`          | Landing, ISRU particles, filling tanks, reactor, rover and base                                        |
+| `src/scene/SurfaceTerrain.tsx`       | Lightweight terrain, horizon and instanced rocks                                                       |
+| `src/scene/BeyondScene.tsx`          | New World analogy, lunar routes, industry, loops, asteroids, propulsion, surface power, trade triangle |
+| `src/scene/BeyondIntroduction.tsx`   | Part II opening, historical analogy and repeated logistics                                             |
+| `src/scene/BeyondPrimitives.tsx`     | Reusable resource flows, stations, Moon, asteroids and sailing ship                                    |
+| `src/scene/Infrastructure.tsx`       | Surface grids, heat/electricity/thrust diagram, radiators and electric freighters                      |
+| `src/scene/LogisticsNetwork.tsx`     | Progressive final network and transportation filters                                                   |
+| `src/scene/HumanoidRobots.tsx`       | Articulated humanoids, cargo and maintenance worksite                                                  |
+| `src/scene/PropulsionComparison.tsx` | Separate propulsion lanes, trails, braking and held arrivals                                           |
+| `src/ui/PropulsionReadout.tsx`       | Synchronized route progress and arrival status                                                         |
+| `src/scene/CameraController.tsx`     | GSAP easing, responsive framing and bounded orbit controls                                             |
+| `src/scene/SceneLabels.tsx`          | DOM labels projected from 3D anchors                                                                   |
+| `src/ui/MissionUI.tsx`               | Existing visual interface, timeline, ISRU callout, epistemic notes and modal                           |
+| `src/ui/BeyondControls.tsx`          | Compact chapter interactions, analogy banners, trade triangle and explanations                         |
+| `src/styles.css`                     | Responsive styling                                                                                     |
+| `src/presentation.css`               | Focused aerospace presentation pass and its responsive adjustments                                     |
+| `public/textures/`                   | Local planet maps, attribution and license                                                             |
 
 React, TypeScript, Vite, Three.js, React Three Fiber, Drei and GSAP power the experience. Fonts and textures are local; no API keys or backend are required. Internet access at runtime is only needed to open external references. Geometry is generated in code, terrain rocks are instanced, and pixel density is capped at 1.75.
 
@@ -99,9 +115,7 @@ The **New World analogy** is Robert Zubrin's historical argument comparing front
 
 ## Sources and assets
 
-- [Robert Zubrin: The Case for Mars (1996)](https://www.marssociety.org/concepts/mars-direct/)
-- [Robert Zubrin: "The Case for Colonizing Mars" (Ad Astra, 1996)](https://marspapers.org/paper/Zubrin_1996_1.pdf)
-- [Robert Zubrin: The New World on Mars (2024)](https://www.marssociety.org/news/2024/02/15/the-new-world-on-mars-now-available/)
+- [The Mars Society: Zubrin’s The New World on Mars (2024) and economic argument](https://www.marssociety.org/news/2024/02/24/new-robert-zubrin-book-the-new-world-on-mars-has-been-published/)
 - [Robert Zubrin: Mars Direct (1995)](https://marspapers.org/paper/Zubrin_1995_3.pdf) — historical hydrogen, power, cargo transfer and surface-stay descriptions.
 - [The Mars Society: Mars Direct Concepts](https://www.marssociety.org/concepts/mars-direct/)
 - [NASA: Sabatier/electrolysis demonstration plant](https://ntrs.nasa.gov/citations/19970026756)
@@ -109,10 +123,11 @@ The **New World analogy** is Robert Zubrin's historical argument comparing front
 - [NASA: lunar water and ices](https://science.nasa.gov/moon/moon-water-and-ices/)
 - [NASA: in-situ resource utilization](https://www.nasa.gov/overview-in-situ-resource-utilization/)
 - [NASA: space nuclear propulsion (NTP & NEP)](https://www.nasa.gov/space-technology-mission-directorate/tdm/space-nuclear-propulsion/)
+- [NASA: Valkyrie humanoid robotics research](https://www.nasa.gov/technology/r5/)
 - [NASA: fission surface power project](https://www.nasa.gov/directorates/stmd/fission-surface-power/)
 - [NASA/JPL: near-Earth asteroid resources](https://cneos.jpl.nasa.gov/about/nea_resource.html)
 
-Asset credits are in `public/textures/ATTRIBUTION.md`. Solar System Scope maps are CC BY 4.0; Earth and Moon maps come from Three.js examples. These are visualization assets, not precision measurements. This independent project is not affiliated with NASA or The Mars Society.
+Asset credits are in `public/textures/ATTRIBUTION.md`. Solar System Scope day, cloud, Mars and Sun maps are CC BY 4.0. Earth normal/ocean masks and the Moon map come from Three.js examples. Earth uses a separate cloud layer, subtle surface normals, an ocean roughness mask and a lit atmospheric rim. These are visualization assets, not precision measurements. This independent project is not affiliated with NASA, The Mars Society or SpaceX.
 
 ## Tests and screenshots
 

@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import type { Mission } from '../hooks/useMission'
 import {
   orbitPosition,
@@ -21,22 +21,42 @@ import {
 } from '../data/solarSystem'
 export { Label } from './SceneLabels'
 export { EARTH, MARS, SUN } from '../data/solarSystem'
+export const DISTANT_SUN = new THREE.Vector3(-10, 15, 10)
+
+// The source mask is white over oceans. Invert it in the roughness shader so
+// only water gets a soft specular response; land remains matte.
+const earthRoughness: THREE.MeshStandardMaterial['onBeforeCompile'] = (
+  shader,
+) => {
+  shader.fragmentShader = shader.fragmentShader.replace(
+    '#include <roughnessmap_fragment>',
+    `
+    float roughnessFactor = roughness;
+    #ifdef USE_ROUGHNESSMAP
+      float oceanMask = texture2D(roughnessMap, vRoughnessMapUv).r;
+      roughnessFactor = mix(0.95, 0.34, oceanMask);
+    #endif
+  `,
+  )
+}
 
 function Atmosphere({
   radius,
   color,
   position,
+  lightPosition,
 }: {
   radius: number
   color: string
   position: THREE.Vector3
+  lightPosition: THREE.Vector3
 }) {
   const shell = useRef<THREE.Mesh>(null)
   const world = useMemo(() => new THREE.Vector3(), [])
   useFrame(() => {
     if (shell.current)
       material.uniforms.sunDirection.value
-        .copy(SUN)
+        .copy(lightPosition)
         .sub(shell.current.getWorldPosition(world))
         .normalize()
   })
@@ -45,7 +65,9 @@ function Atmosphere({
       new THREE.ShaderMaterial({
         uniforms: {
           glowColor: { value: new THREE.Color(color) },
-          sunDirection: { value: SUN.clone().sub(position).normalize() },
+          sunDirection: {
+            value: lightPosition.clone().sub(position).normalize(),
+          },
         },
         vertexShader: `varying vec3 vNormal; varying vec3 vView; varying vec3 worldNormal;
       void main(){ vec4 p=modelViewMatrix*vec4(position,1.0); vNormal=normalize(normalMatrix*normal); vView=normalize(-p.xyz); worldNormal=normalize(mat3(modelMatrix)*normal); gl_Position=projectionMatrix*p; }`,
@@ -55,8 +77,9 @@ function Atmosphere({
         blending: THREE.AdditiveBlending,
         depthWrite: false,
       }),
-    [color, position],
+    [color],
   )
+  useEffect(() => () => material.dispose(), [material])
   return (
     <mesh ref={shell} material={material}>
       <sphereGeometry args={[radius * 1.035, 64, 48]} />
@@ -70,19 +93,25 @@ export function Planet({
   radius,
   paused,
   subdued = false,
+  lightPosition = SUN,
 }: {
   kind: 'mars' | 'earth'
   position: THREE.Vector3
   radius: number
   paused: boolean
   subdued?: boolean
+  lightPosition?: THREE.Vector3
 }) {
   const surface = useRef<THREE.Group>(null)
   const clouds = useRef<THREE.Mesh>(null)
   const map = useTexture(
-    `/textures/${kind === 'earth' ? 'earth_atmos_2048' : '2k_mars'}.jpg`,
+    `/textures/${kind === 'earth' ? 'earth_daymap' : '2k_mars'}.jpg`,
   )
   const cloudMap = useTexture('/textures/2k_earth_clouds.jpg')
+  const [oceanMask, normalMap] = useTexture([
+    '/textures/earth_specular_2048.jpg',
+    '/textures/earth_normal_2048.jpg',
+  ])
   useMemo(() => {
     map.colorSpace = THREE.SRGBColorSpace
     map.anisotropy = 8
@@ -104,6 +133,10 @@ export function Planet({
               color={subdued ? '#777b83' : '#ffffff'}
               roughness={kind === 'earth' ? 0.68 : 0.98}
               metalness={0}
+              roughnessMap={kind === 'earth' ? oceanMask : null}
+              normalMap={kind === 'earth' ? normalMap : null}
+              normalScale={new THREE.Vector2(0.12, 0.12)}
+              onBeforeCompile={kind === 'earth' ? earthRoughness : undefined}
             />
           </mesh>
         </group>
@@ -114,7 +147,7 @@ export function Planet({
               alphaMap={cloudMap}
               color={subdued ? '#81909c' : '#ffffff'}
               transparent
-              opacity={0.68}
+              opacity={0.57}
               depthWrite={false}
               roughness={1}
             />
@@ -125,6 +158,7 @@ export function Planet({
         radius={radius}
         color={kind === 'earth' ? '#529ada' : '#b9825d'}
         position={position}
+        lightPosition={lightPosition}
       />
     </group>
   )

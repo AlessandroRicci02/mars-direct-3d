@@ -325,7 +325,7 @@ export function MarsSurface({ mission }: { mission: Mission }) {
                 <b>100 kW NUCLEAR REACTOR</b>
                 <small>HISTORICAL MARS DIRECT · REMOTE POWER SOURCE</small>
               </Label>
-              <Label position={[1, 2.5, -1.8]} color="green">
+              <Label position={[-0.8, 2.9, -1.8]} color="green">
                 <b>ISRU PLANT</b>
                 <small>LOCAL RESOURCES → PROPELLANT</small>
               </Label>

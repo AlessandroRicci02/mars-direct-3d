@@ -1,0 +1,927 @@
+/* Aerospace presentation pass. The chapter layout, identity and orange accent
+   remain; strong type and restrained chrome give the 3D scenes more presence. */
+.experience {
+  min-height: 760px;
+}
+.site-header {
+  height: 96px;
+  border-bottom: 0;
+  margin-inline: 4.2%;
+}
+.brand {
+  font-weight: 750;
+  letter-spacing: 2.4px;
+}
+.brand small {
+  letter-spacing: 3px;
+  font-weight: 600;
+}
+.site-header nav {
+  gap: 30px;
+}
+.site-header nav button {
+  color: #d9dddf;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.55px;
+}
+.site-header nav .nav-active {
+  color: #fff;
+}
+.nav-active:after {
+  bottom: 23px;
+  height: 1px;
+}
+.header-tag {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+}
+.story {
+  left: 5.5%;
+  top: 24%;
+  width: min(440px, 34%);
+}
+.story h1,
+.chapter-story h1,
+[data-section='beyond'] .story h1 {
+  font-family: 'DM Sans Variable', Arial, sans-serif;
+  font-size: clamp(38px, 3.7vw, 65px);
+  font-weight: 780;
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  margin: 23px 0;
+}
+.story h1 > span,
+.story h1 > em {
+  white-space: normal;
+  text-wrap: balance;
+}
+[data-section='mission'][data-stage='0'] .story h1,
+[data-section='beyond'][data-stage='0'] .story h1 {
+  font-size: clamp(58px, 5.1vw, 90px);
+}
+.description,
+[data-section='beyond'] .description {
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 365px;
+  color: #c3c7ca;
+}
+.eyebrow {
+  font-weight: 650;
+  letter-spacing: 1.7px;
+}
+.epistemic-tag {
+  font-size: 8px;
+  color: #9eaaa4;
+  letter-spacing: 1.2px;
+}
+.notes-button {
+  color: #adb4b9;
+  font-size: 11px;
+}
+.story-actions {
+  margin-top: 28px;
+}
+.primary-button {
+  position: relative;
+  height: 54px;
+  background: #080b102e;
+  border: 1px solid #eff1ee;
+  color: white;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.65px;
+  font-weight: 750;
+  padding-inline: 23px;
+  box-shadow: inset 0 0 0 #f1f1ec;
+  transition:
+    box-shadow 0.35s ease,
+    color 0.35s ease,
+    border-color 0.2s;
+}
+.primary-button:hover {
+  color: #101418;
+  background: transparent;
+  box-shadow: inset 0 -60px 0 #f1f1ec;
+}
+.primary-button:active {
+  background: var(--orange);
+}
+.back-button {
+  width: 54px;
+  height: 54px;
+  border-color: #6c7378;
+  background: transparent;
+}
+.chapter-stat {
+  margin-top: 25px;
+  padding-top: 18px;
+  max-width: 350px;
+}
+.chapter-stat strong,
+[data-section='beyond'] .chapter-stat strong {
+  font-size: 27px;
+  font-weight: 550;
+  color: #e8e6df;
+}
+.chapter-stat span {
+  color: #929da6;
+  font-size: 8px;
+}
+.view-indicator {
+  top: 122px;
+}
+.scene-legend {
+  top: 165px;
+}
+.scene-tools {
+  bottom: 182px;
+}
+.tool-buttons button {
+  width: 36px;
+  height: 36px;
+}
+.mission-footer {
+  height: 163px;
+}
+.timeline-heading {
+  margin-bottom: 15px;
+}
+.timeline-step {
+  padding-bottom: 9px;
+}
+.step-name,
+[data-section='beyond'] .step-name {
+  font-size: 10px;
+}
+.timeline-step.active {
+  background: linear-gradient(0deg, #e7937010, transparent 65%);
+}
+.timeline-step.active .step-name {
+  color: white;
+  font-weight: 750;
+}
+.timeline-step.active .step-number {
+  color: var(--orange);
+}
+.timeline-step.visited .step-name {
+  color: #a7acae;
+}
+.footer-meta {
+  margin-top: 10px;
+  padding-top: 13px;
+}
+.principle-card {
+  right: 4.2%;
+  bottom: 27%;
+  border-left-color: #e7937040;
+}
+.principle-card p {
+  font-size: 15px;
+}
+.scene-label {
+  text-shadow:
+    0 1px 5px #000,
+    0 0 15px #000;
+}
+.scene-label b {
+  font-weight: 700;
+}
+.scene-label small {
+  letter-spacing: 1.25px;
+  color: #b1b8bd;
+}
+.beyond-panel,
+.fuel-panel,
+.transfer-note {
+  z-index: 25;
+  bottom: 232px;
+}
+.beyond-panel {
+  width: min(455px, 36%);
+  padding: 13px 0 0;
+  background: linear-gradient(90deg, #080b1099, #080b1066);
+  border-top: 1px solid #e8e9e22e;
+}
+.beyond-panel p {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #bac2c7;
+  margin: 10px 0 0;
+}
+.chapter-options {
+  gap: 4px 9px;
+}
+.chapter-options button {
+  border: 0;
+  border-bottom: 1px solid #ffffff24;
+  padding: 7px 2px;
+  font-size: 10px;
+  font-weight: 650;
+  color: #9da7ae;
+  border-radius: 0;
+}
+.chapter-options button:hover {
+  color: white;
+  border-bottom-color: white;
+}
+.chapter-options button[aria-pressed='true'] {
+  border-color: var(--orange);
+  background: transparent;
+  color: #ffb48e;
+}
+.presentation-layer {
+  transition:
+    opacity 0.25s ease,
+    visibility 0.25s ease;
+}
+.focus-toggle {
+  position: absolute;
+  z-index: 32;
+  top: 119px;
+  left: 5.5%;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  height: 36px;
+  padding: 0 12px;
+  border: 1px solid #a4b0b352;
+  color: #e8ebeb;
+  background: #0a0e14a8;
+  font-size: 9px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  transition:
+    background 0.25s,
+    border-color 0.25s;
+}
+.focus-toggle:hover {
+  background: #1b242be6;
+  border-color: white;
+}
+.focus-toggle kbd {
+  font-family: inherit;
+  color: #939fa6;
+  border: 1px solid #ffffff29;
+  font-size: 8px;
+  padding: 2px 4px;
+  margin-left: 6px;
+}
+.focus-navigation {
+  position: absolute;
+  z-index: 32;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 8px;
+  border: 1px solid #ffffff26;
+  background: #080d14b8;
+  backdrop-filter: blur(12px);
+}
+.focus-navigation button {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid #ffffff30;
+  background: transparent;
+}
+.focus-navigation button:hover:not(:disabled) {
+  background: #ffffff15;
+}
+.focus-navigation button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.focus-navigation span {
+  min-width: 140px;
+  text-align: center;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.focus-navigation small {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 7px;
+  letter-spacing: 1.8px;
+  color: #b3a294;
+}
+.experience[data-focus='true'] {
+  height: 100svh;
+  min-height: 360px;
+}
+[data-focus='true'] .presentation-layer {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+[data-focus='true'] .focus-toggle {
+  top: 24px;
+  left: 28px;
+}
+[data-focus='true'] .scene-tools {
+  bottom: 34px;
+  right: 28px;
+}
+[data-focus='true'] .scene-labels {
+  clip-path: none;
+}
+[data-focus='true'] .scene-label small {
+  display: block;
+}
+.propulsion-readout {
+  margin-top: 14px;
+}
+.propulsion-readout > span {
+  font-size: 7px;
+  color: #93a1a9;
+  letter-spacing: 1.1px;
+}
+.propulsion-results {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin-top: 12px;
+}
+.propulsion-results b {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  font-weight: 650;
+}
+.propulsion-results em {
+  color: #707d85;
+  font-style: normal;
+  font-size: 9px;
+  margin-right: 4px;
+}
+.propulsion-results small {
+  display: block;
+  font-size: 7px;
+  letter-spacing: 0.9px;
+  margin: 6px 0;
+  color: #a8b2b8;
+}
+.propulsion-results [data-arrived='true'] small {
+  color: inherit;
+}
+.route-progress {
+  height: 2px;
+  background: #ffffff1c;
+  overflow: hidden;
+}
+.route-progress i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: currentColor;
+}
+@media (min-width: 761px) {
+  .site-header nav button {
+    position: relative;
+  }
+  .site-header nav button:not(.nav-active)::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 23px;
+    height: 1px;
+    background: white;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.25s;
+  }
+  .site-header nav button:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  [data-section='beyond'][data-stage='8'] .beyond-panel {
+    width: min(480px, 38%);
+  }
+}
+.network-phase {
+  color: #c1d0c5;
+  font-size: 8px;
+  letter-spacing: 1.2px;
+  margin-bottom: 8px;
+}
+.closing-line {
+  display: block;
+  color: var(--orange);
+  text-transform: uppercase;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 1.4px;
+  margin-top: 11px;
+}
+.fuel-panel {
+  width: min(430px, 35%);
+  padding: 17px 20px;
+  background: #090e14e8;
+  border: 1px solid #c4d4da30;
+  pointer-events: auto;
+}
+.isru-summary {
+  margin: 20px 0;
+}
+.isru-baseline {
+  font-size: 7px;
+  letter-spacing: 1.1px;
+  color: #909da6;
+}
+.process-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 9px;
+  margin: 15px 0;
+}
+.process-inputs span {
+  font-size: 9px;
+  line-height: 1.7;
+  color: #a9b5bc;
+}
+.process-inputs b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 24px;
+  line-height: 1.4;
+  color: white;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.process-inputs span:last-child b {
+  color: var(--orange);
+}
+.process-inputs i {
+  font-size: 14px;
+  font-style: normal;
+  color: #8c979f;
+}
+.process-inputs svg {
+  color: var(--orange);
+  flex-shrink: 0;
+}
+.process-power {
+  display: block;
+  color: #c1c6be;
+  font-size: 8px;
+  letter-spacing: 0.55px;
+}
+.process-power i {
+  color: var(--orange);
+  font-style: normal;
+  margin: 0 5px;
+}
+.fuel-caption {
+  font-size: 8px;
+}
+.fuel-panel p {
+  font-size: 11px;
+}
+.process-note {
+  display: block;
+  font-size: 9px;
+  line-height: 1.6;
+  color: #9ba8b2;
+}
+.isru-variant-pill {
+  padding: 6px 0;
+  font-size: 9px;
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid #74818a;
+}
+.isru-variant-pill.active {
+  color: var(--orange);
+  background: none;
+  border-color: var(--orange);
+}
+.isru-variant-bar {
+  gap: 15px;
+}
+.info-dialog {
+  border-color: #ffffff40;
+  border-radius: 0;
+  background: #0a0f16;
+}
+.info-dialog h2 {
+  font-weight: 750;
+  letter-spacing: -0.035em;
+}
+.info-dialog p {
+  line-height: 1.8;
+}
+.part-transition {
+  position: absolute;
+  inset: 0;
+  z-index: 28;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  background: #080b10;
+  animation: part-reveal 2.6s ease both;
+}
+.part-transition span {
+  color: var(--orange);
+  font-size: 10px;
+  letter-spacing: 4px;
+}
+.part-transition strong {
+  font-size: clamp(24px, 4.7vw, 70px);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  margin-top: 15px;
+}
+@keyframes part-reveal {
+  0% {
+    opacity: 0;
+  }
+  16%,
+  44% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@media (min-width: 1600px) {
+  .description,
+  [data-section='beyond'] .description {
+    font-size: 17px;
+    max-width: 395px;
+  }
+  .story {
+    width: 510px;
+  }
+  .beyond-panel {
+    width: 480px;
+  }
+}
+@media (max-height: 820px) and (min-width: 761px) {
+  .story {
+    top: 21%;
+  }
+  .story h1,
+  .chapter-story h1,
+  [data-section='beyond'] .story h1 {
+    font-size: clamp(35px, 3.6vw, 52px);
+    margin: 17px 0;
+  }
+  [data-section='mission'][data-stage='0'] .story h1,
+  [data-section='beyond'][data-stage='0'] .story h1 {
+    font-size: 60px;
+  }
+  .description,
+  [data-section='beyond'] .description {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+  .story-actions {
+    margin-top: 22px;
+  }
+  .chapter-stat {
+    margin-top: 20px;
+    padding-top: 15px;
+  }
+  .beyond-panel,
+  .fuel-panel,
+  .transfer-note {
+    bottom: 230px;
+  }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .story {
+    width: 35%;
+    left: 4.5%;
+  }
+  .site-header nav {
+    gap: 17px;
+  }
+  .site-header nav button {
+    font-size: 10px;
+  }
+  .story h1,
+  .chapter-story h1,
+  [data-section='beyond'] .story h1 {
+    font-size: 39px;
+  }
+  .beyond-panel,
+  .fuel-panel {
+    width: 42%;
+  }
+  .principle-card {
+    display: none;
+  }
+  .chapter-stat strong,
+  [data-section='beyond'] .chapter-stat strong {
+    font-size: 23px;
+  }
+}
+@media (max-width: 760px) {
+  .focus-toggle {
+    position: absolute;
+    top: 19px;
+    left: auto;
+    right: 6%;
+    height: 33px;
+    padding-inline: 9px;
+    font-size: 8px;
+    letter-spacing: 0.5px;
+  }
+  .focus-toggle kbd {
+    display: none;
+  }
+  [data-focus='true'] .focus-toggle {
+    top: 20px;
+    left: 20px;
+    right: auto;
+  }
+  [data-focus='true'] .focus-navigation {
+    bottom: 24px;
+    width: calc(100% - 40px);
+    justify-content: space-between;
+    gap: 8px;
+  }
+  [data-focus='true'] .scene-tools {
+    bottom: auto;
+    top: 20px;
+    right: 20px;
+  }
+  [data-focus='true'] .orbit-hint {
+    display: none;
+  }
+  [data-focus='true'] .tool-buttons button {
+    width: 34px;
+    height: 33px;
+  }
+  [data-focus='true'] .scene-labels {
+    clip-path: none;
+  }
+  .propulsion-results {
+    gap: 12px;
+    margin-top: 9px;
+  }
+  .propulsion-results b {
+    font-size: 10px;
+  }
+  .propulsion-readout > span {
+    font-size: 6px;
+    letter-spacing: 0.7px;
+  }
+  .experience {
+    min-height: 930px;
+  }
+  [data-section='beyond'].experience {
+    min-height: 1060px;
+  }
+  [data-section='mission'][data-stage='4'].experience {
+    min-height: 1240px;
+  }
+  [data-section='beyond'][data-stage='8'].experience {
+    min-height: 1180px;
+  }
+  .site-header {
+    height: 108px;
+    margin-inline: 6%;
+    gap: 14px;
+  }
+  .brand {
+    font-size: 17px;
+  }
+  .brand-mark {
+    width: 31px;
+    height: 31px;
+  }
+  .site-header nav {
+    gap: 12px;
+    height: 29px;
+  }
+  .site-header nav button {
+    font-size: 9px;
+    letter-spacing: 0.2px;
+  }
+  .nav-active:after {
+    bottom: 0;
+  }
+  .story {
+    left: 7%;
+    top: 135px;
+    width: 86%;
+  }
+  .story h1,
+  .chapter-story h1,
+  [data-section='beyond'] .story h1 {
+    font-size: clamp(31px, 9vw, 48px);
+    line-height: 1.05;
+    margin: 17px 0 14px;
+  }
+  [data-section='mission'][data-stage='0'] .story h1,
+  [data-section='beyond'][data-stage='0'] .story h1 {
+    font-size: clamp(46px, 13vw, 64px);
+  }
+  .description,
+  [data-section='beyond'] .description {
+    font-size: 12px;
+    max-width: 360px;
+    line-height: 1.7;
+  }
+  .eyebrow {
+    font-size: 7px;
+    letter-spacing: 1.1px;
+  }
+  .epistemic-tag {
+    font-size: 6px;
+    letter-spacing: 0.8px;
+  }
+  .intro-credit {
+    font-size: 9px;
+  }
+  .story-actions {
+    margin-top: 18px;
+  }
+  .primary-button {
+    height: 46px;
+    padding-inline: 18px;
+    font-size: 10px;
+  }
+  .back-button {
+    width: 46px;
+    height: 46px;
+  }
+  .notes-button {
+    font-size: 10px;
+    margin-top: 12px;
+  }
+  .chapter-stat {
+    margin-top: 17px;
+    padding-top: 13px;
+  }
+  .chapter-stat strong {
+    font-size: 24px;
+  }
+  .chapter-stat span {
+    font-size: 6px;
+  }
+  .scene-tools {
+    bottom: 189px;
+  }
+  .tool-buttons button {
+    width: 33px;
+    height: 33px;
+  }
+  .view-indicator {
+    top: auto;
+    bottom: 195px;
+    max-width: 44%;
+  }
+  .scene-legend {
+    top: auto;
+    bottom: 236px;
+    font-size: 7px;
+  }
+  .beyond-panel {
+    width: 86%;
+    bottom: 242px;
+    right: 7%;
+    background: #080b10b8;
+  }
+  .beyond-panel p {
+    font-size: 10px;
+    line-height: 1.55;
+  }
+  .chapter-options {
+    gap: 2px 12px;
+  }
+  .chapter-options button {
+    font-size: 10px;
+    min-height: 34px;
+    padding: 7px 0;
+  }
+  .network-phase {
+    font-size: 7px;
+    letter-spacing: 0.8px;
+  }
+  .closing-line {
+    font-size: 9px;
+  }
+  .fuel-panel,
+  [data-stage='4'] .fuel-panel {
+    width: 86%;
+    right: 7%;
+    bottom: 242px;
+    padding: 13px 15px;
+    pointer-events: auto;
+  }
+  .panel-caption {
+    font-size: 7px;
+  }
+  .process-inputs b {
+    font-size: 21px;
+  }
+  .process-inputs span {
+    font-size: 8px;
+  }
+  .process-note {
+    font-size: 8px;
+  }
+  .process-power {
+    font-size: 6px;
+    letter-spacing: 0.4px;
+  }
+  .isru-summary {
+    margin-block: 13px;
+  }
+  .isru-variant-pill {
+    min-height: 34px;
+    font-size: 8px;
+    text-align: left;
+  }
+  .fuel-panel p {
+    font-size: 10px;
+  }
+  .transfer-note {
+    bottom: 268px;
+    width: 80%;
+  }
+  .mission-footer {
+    height: 163px;
+  }
+  .footer-meta > span:first-child {
+    display: none;
+  }
+  .footer-meta > span:last-child {
+    max-width: none;
+    font-size: 7px;
+  }
+  .scene-label {
+    font-size: 7px;
+    letter-spacing: 0.7px;
+  }
+  .scene-labels,
+  [data-section='beyond'] .scene-labels {
+    clip-path: inset(43% 0 31% 0);
+  }
+  [data-section='mission'][data-stage='4'] .scene-labels {
+    clip-path: inset(33% 0 43% 0);
+  }
+  [data-section='beyond'][data-stage='10'] .scene-labels {
+    clip-path: inset(40% 0 31% 0);
+  }
+  .scene-vignette,
+  .experience[data-stage='3'] .scene-vignette,
+  .experience[data-stage='4'] .scene-vignette,
+  .experience[data-stage='7'] .scene-vignette {
+    background: linear-gradient(
+      180deg,
+      #080b10e6 0%,
+      #080b10ba 27%,
+      transparent 48%,
+      transparent 62%,
+      #080b10ba 78%,
+      #080b10 90%
+    );
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .part-transition {
+    display: none;
+  }
+  .presentation-layer,
+  .primary-button,
+  .focus-toggle,
+  .site-header nav button::after {
+    transition: none;
+  }
+}
+
+/* Focus must override every chapter's mobile reading height and label mask. */
+.experience[data-focus='true'][data-section] {
+  height: 100svh;
+  min-height: 360px;
+}
+.experience[data-focus='true'][data-section] .scene-labels {
+  clip-path: none;
+}
+@media (max-width: 1100px) and (min-width: 761px) {
+  [data-focus='true'] .orbit-hint {
+    display: none;
+  }
+  [data-focus='true'] .focus-navigation {
+    left: 28px;
+    transform: none;
+  }
+}

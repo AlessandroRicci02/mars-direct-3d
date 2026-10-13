@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react'
 import { beyondStages } from '../data/beyond'
 import { stages } from '../data/mission'
 
@@ -11,7 +17,9 @@ export function useMission() {
   const [index, setIndex] = useState(0)
   const [autoplay, setAutoplay] = useState(false)
   const [paused, setPaused] = useState(false)
-  const [labels, setLabels] = useState(true)
+  const [regularLabels, setRegularLabels] = useState(true)
+  const [focusLabels, setFocusLabels] = useState(false)
+  const [focus3d, setFocus3d] = useState(false)
   const [resetKey, setResetKey] = useState(0)
   const [reducedMotion] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches,
@@ -43,7 +51,9 @@ export function useMission() {
     },
     [chapters.length, section, goToSection],
   )
-  useEffect(() => {
+  // Stop the old clock before paint when pause/navigation commits. This avoids
+  // one queued frame advancing after the interface already says "paused".
+  useLayoutEffect(() => {
     let frame = 0
     let last = performance.now()
     const tick = (now: number) => {
@@ -56,7 +66,7 @@ export function useMission() {
           progress.current + delta / stage.duration,
         )
         if (section === 'beyond' && index === 2 && option === 'all')
-          setDevelopment(Math.min(3, Math.floor(progress.current * 4)))
+          setDevelopment(Math.min(6, Math.floor(progress.current * 7)))
         if (section === 'beyond' && index === 10)
           setDevelopment(Math.min(5, Math.floor(progress.current * 6)))
       }
@@ -83,6 +93,22 @@ export function useMission() {
   useEffect(() => {
     const key = (event: KeyboardEvent) => {
       if (document.querySelector('dialog[open]')) return
+      if (event.ctrlKey || event.metaKey || event.altKey || event.repeat) return
+      if (
+        (event.target as HTMLElement).closest(
+          'input, textarea, select, [contenteditable="true"]',
+        )
+      )
+        return
+      if (event.key.toLowerCase() === 'h') {
+        event.preventDefault()
+        setFocus3d((value) => !value)
+        return
+      }
+      if (event.key === 'Escape') {
+        setFocus3d(false)
+        return
+      }
       if (
         (event.target as HTMLElement).closest(
           'button, a, input, [role="dialog"]',
@@ -121,8 +147,10 @@ export function useMission() {
     setAutoplay,
     paused,
     setPaused,
-    labels,
-    setLabels,
+    labels: focus3d ? focusLabels : regularLabels,
+    setLabels: focus3d ? setFocusLabels : setRegularLabels,
+    focus3d,
+    setFocus3d,
     progress,
     resetKey,
     replay,

@@ -1,10 +1,12 @@
 import type { Mission } from '../hooks/useMission'
+import { industrySteps, networkSteps } from '../data/development'
+import { PropulsionReadout } from './PropulsionReadout'
 
 const sets: Record<number, [string, string][]> = {
   0: [
-    ['all', 'The frontier question'],
-    ['analogy', 'The New World analogy'],
-    ['transport', 'Expeditions to networks'],
+    ['all', 'The next frontier'],
+    ['analogy', 'New World analogy'],
+    ['transport', 'Transport networks'],
   ],
   1: [
     ['all', 'Both routes'],
@@ -13,14 +15,20 @@ const sets: Record<number, [string, string][]> = {
   ],
   2: [
     ['all', 'Auto'],
-    ['0', 'Outpost'],
-    ['1', 'Resources'],
-    ['2', 'Industry'],
-    ['3', 'Partial autonomy'],
+    ...industrySteps.map((s, i): [string, string] => [String(i), s.short]),
+  ],
+  4: [
+    ['all', 'Earth-dependent'],
+    ['future', 'Independent capacity'],
   ],
   5: [
     ['all', 'Water loop'],
     ['materials', 'Material loop'],
+  ],
+  6: [
+    ['all', 'Cargo handling'],
+    ['service', 'Maintenance'],
+    ['purpose', 'Human possibilities'],
   ],
   8: [
     ['all', 'Compare all'],
@@ -34,108 +42,86 @@ const sets: Record<number, [string, string][]> = {
     ['nep', 'NEP vehicle'],
   ],
   10: [
-    ['all', 'All systems'],
-    ['triangle', "Zubrin's trade triangle"],
-    ['expanded', 'Extended solar network'],
-    ['nep', 'NEP logistics'],
+    ['all', 'Build network'],
+    ['expanded', 'Full network'],
+    ['chemical', 'Chemical'],
+    ['ntp', 'NTP'],
+    ['nep', 'NEP'],
+    ['triangle', "Zubrin's triangle"],
   ],
 }
 
 const propulsion: Record<string, string> = {
-  all: 'Conceptual comparison — real mission performance depends on reactor power, vehicle mass, specific impulse, thrust, payload, trajectory, launch infrastructure, and mission duration.',
+  all: 'In this illustrative mission: NTP first, chemical next, NEP cargo last. Actual flight times depend on vehicle and trajectory; this is not a universal speed ranking.',
   chemical:
-    'Chemical propulsion (High-thrust conventional transport): Mature technology, essential for high-acceleration burns, launch, and landing; limited by lower specific impulse (~450 s).',
-  ntp: 'Nuclear Thermal Propulsion (Fast long-range transport): High thrust relative to electric, roughly 2× chemical specific impulse (~900 s). Highly attractive for reducing crew transit times and high-energy trajectories.',
-  nep: 'Nuclear Electric Propulsion (Interplanetary cargo ship): Extremely high propellant efficiency (~3,000–5,000 s Isp) with continuous low thrust for heavy cargo and repeated logistics; requires long spiral departure phases and large radiator arrays.',
+    'High thrust, short burns, then coast. Mature technology for launch, landing and impulsive maneuvers.',
+  ntp: 'A reactor heats propellant directly. High thrust; many concepts target about twice the specific impulse of the best chemical engines.',
+  nep: 'A reactor supplies electric thrusters. Efficient, continuous low thrust; departure spirals, reactor mass and radiator area shape the mission.',
 }
 
 export function BeyondControls({ mission }: { mission: Mission }) {
   const { index, option, setOption } = mission
-
+  const level = option === 'all' ? mission.development : Number(option)
   const captions: Record<number, string> = {
     0:
       option === 'analogy'
-        ? "Robert Zubrin's argument: Settling North America created value not merely by shipping commodities to Europe, but by establishing a new branch of human civilization that produced new science, industry, and institutions. Mars could follow a comparable path."
+        ? 'Zubrin’s economic analogy: new settlements can become centers of invention. Historical colonization also involved conquest and displacement; this is a limited analogy.'
         : option === 'transport'
-          ? 'Every frontier begins as an extraordinary, high-risk expedition. Through navigation, infrastructure, and economics, transatlantic movement became routine transport. Could interplanetary transport undergo a comparable transition?'
-          : 'THE NEW WORLD ANALOGY · Mars may play a role in the new age of exploration analogous to North America in the previous age — creating a second productive center of human civilization.',
-    1: 'The Moon: High-thrust chemical for crew & landings vs electric for slow cargo. Polar ice & regolith. Helium-3: Speculative — dependent on future fusion technology. Water from Mars to the Moon makes no logistical sense.',
-    2: [
-      'Stage 1: Earth-dependent base imports habitats, machinery, power systems, life-support, robotics, spare parts, and crew.',
-      'Stage 2: Local ISRU & construction begins — water, oxygen, methane, and durable regolith structures.',
-      'Stage 3: Industrial settlement adds controlled-environment agriculture, local energy grids, and components.',
-      'Stage 4: Partially autonomous economy develops broader industrial capability. Long-term scenario.',
-    ][option === 'all' ? mission.development : Number(option)],
-    3: 'Solving extreme constraints (autonomous robotics, closed-loop life support, dust mitigation, recycling) could yield transformative dual-use technologies on Earth. No guaranteed economic returns promised.',
-    4: 'One planet → Two worlds: Mars is not an easy emergency backup. For a long time, a Martian settlement remains dependent on Earth. True civilizational resilience develops only over very long timescales.',
-    5:
-      option === 'materials'
-        ? 'Material loop: MATERIAL → PRODUCT → REPAIR → RECYCLE → NEW PRODUCT. Energy and make-up resources still enter.'
-        : 'Water loop: WATER → HUMAN USE → RECOVERY → PURIFICATION → WATER. Losses still require make-up resources.',
-    6: 'Speculative long-term scenario: If AI, robotics, and automation drastically lower the marginal cost of material production, humanity could direct greater freedom toward science, exploration, art, philosophy, meaning, and human flourishing.',
-    7: 'Asteroid resources: Use space resources in space. Water, metals, silicates, and volatiles supply orbital depots, Moon, Mars, and deep-space vehicles rather than shipping raw ore to Earth.',
+          ? 'An expedition becomes a network only through dependable transport, power and resupply. A possible future, not an inevitable one.'
+          : 'Beyond a single mission: transportation, energy, resources — and the people who might build a future with them.',
+    1:
+      option === 'cargo'
+        ? 'Electric propulsion can trade travel time for propellant efficiency. Cargo can wait; people and landing maneuvers have different needs.'
+        : 'Chemical propulsion serves crew and landings. Polar ice, regolith oxygen and local construction are potential lunar resources.',
+    2: industrySteps[level]?.caption || '',
+    3: 'Power, robotics, farming and life support could produce useful knowledge on Earth. Economic returns are not guaranteed.',
+    4:
+      option === 'future'
+        ? 'Resilience requires independently productive industry, medicine, electronics and reliable life support. This remains a distant scenario.'
+        : 'For a long time, a Martian settlement would remain dependent on Earth. Mars is not an easy emergency backup.',
+    5: 'Follow the particles around the loop. Energy and make-up resources enter; unrecovered losses leave.',
+    6:
+      option === 'purpose'
+        ? 'If AI and robotics make material production cheaper, more time could go to science, art, relationships and exploration. A possibility, not a forecast.'
+        : option === 'service'
+          ? 'AI-assisted perception and task planning could help humanoids inspect and maintain equipment. People set goals, supervise and handle exceptions; delayed links require local autonomy.'
+          : 'Humanoid robots could handle supplies and use tools designed for people, alongside specialized rovers. This future worksite illustrates a role for AI and human supervision.',
+    7: 'Composition varies by asteroid. Prospect first; then use water, metals and other materials where they are useful in space.',
     8: propulsion[option],
     9:
       option === 'nep'
-        ? 'NEP = Nuclear Electric Propulsion (reactor → electricity → thrusters for spacecraft propulsion). NEP is not the only power source in space.'
-        : 'Surface Fission Power = reactor → electricity → habitats, ISRU, greenhouses, mining, and factories. Continuous abundant power independent of sunlight.',
+        ? 'Reactor heat → electrical conversion → electric thrusters. Radiators reject waste heat. This vehicle is not a surface power grid.'
+        : 'A surface reactor supplies the settlement. Solar, storage and fuel cells can complement it; fission is not the only solution.',
     10:
       option === 'triangle'
-        ? "Zubrin's Proposed Interplanetary Trade Triangle: Earth (high-tech goods & settlers) → Mars (food, supplies, equipment) → Asteroids (metals & raw materials) → Earth. Speculative long-term scenario."
-        : option === 'expanded'
-          ? 'Extended Solar-System Economy: Earth, Moon, Mars, Asteroids, and Orbital Infrastructure exchanging specialized electronics, local structures, water, volatiles, propellants, and depot services.'
-          : option === 'nep'
-            ? 'NEP Cargo Freighters: Interplanetary cargo ships carrying non-urgent heavy cargo between industrial nodes at very high propellant efficiency.'
-            : 'Space settlement is not only about reaching another world. It is about building the energy, transportation, resource and industrial systems that allow civilization to operate beyond Earth.',
+        ? 'Zubrin’s proposed trade triangle: Earth supplies Mars; Mars supports asteroid operations; asteroid products return toward Earth. An economic hypothesis.'
+        : option === 'chemical'
+          ? 'Chemical: crew transport near Earth, local maneuvers and landings. Solid warm routes.'
+          : option === 'ntp'
+            ? 'NTP: a proposed option for high-thrust interplanetary transport. Dashed green routes.'
+            : option === 'nep'
+              ? 'NEP: proposed freighters carry non-urgent cargo between resource and industrial nodes. Dotted blue routes.'
+              : 'Resources used in space, local surface power and complementary transport systems. An illustrative long-term network.',
   }
-
   return (
-    <aside className="beyond-panel" aria-label="Chapter exploration">
-      {index === 0 && (
-        <div className="new-world-banner">
-          <div className="frontier-quote">
-            <span>Every frontier begins as an expedition.</span>
-            <em>Some become transportation networks.</em>
-          </div>
-          <div className="analogy-flow">
-            <div className="flow-track">
-              <b>EUROPE</b> → oceanic expansion → <b>AMERICAS</b> → new
-              civilization
-            </div>
-            <div className="flow-track highlight">
-              <b>EARTH</b> → interplanetary expansion → <b>MARS</b> → new
-              civilization
-            </div>
-          </div>
-        </div>
-      )}
-
+    <aside
+      className="beyond-panel"
+      aria-label="Chapter exploration"
+      data-development={mission.development}
+    >
       {index === 2 && (
         <div className="network-phase">
-          EARTH-DEPENDENT BASE → LOCAL ISRU → LOCAL CONSTRUCTION → LOCAL FOOD →
-          LOCAL MANUFACTURING → INDUSTRIAL SETTLEMENT → PARTIAL AUTONOMY
+          {String(level + 1).padStart(2, '0')} / 07 ·{' '}
+          {industrySteps[level]?.title}
         </div>
       )}
-
       {index === 10 && (
         <div className="network-phase">
-          {option === 'triangle'
-            ? "ZUBRIN'S PROPOSED INTERPLANETARY TRADE TRIANGLE · LONG-TERM SCENARIO"
-            : option === 'expanded'
-              ? 'EXTENDED SOLAR-SYSTEM ECONOMY — CONCEPTUAL'
-              : option === 'nep'
-                ? 'NEP LOGISTICS · INTERPLANETARY CARGO CARRIERS'
-                : [
-                    'EARTH-DEPENDENT EXPLORATION',
-                    'SPACE LOGISTICS',
-                    'LOCAL RESOURCES',
-                    'LOCAL ENERGY',
-                    'LOCAL INDUSTRY',
-                    'MULTI-WORLD ECONOMY',
-                  ][mission.development]}
+          {option === 'all'
+            ? `${String(mission.development + 1).padStart(2, '0')} / 06 · ${networkSteps[mission.development]}`
+            : 'LONG-TERM SCENARIO · SELECT A SYSTEM'}
         </div>
       )}
-
       {sets[index] && (
         <div
           className="chapter-options"
@@ -153,38 +139,10 @@ export function BeyondControls({ mission }: { mission: Mission }) {
           ))}
         </div>
       )}
-
+      {index === 8 && <PropulsionReadout mission={mission} />}
       <p>{captions[index]}</p>
-
-      {index === 0 && (
-        <small className="analogy-disclaimer">
-          Historical note: Transatlantic colonization involved conquest,
-          displacement, and violence. Robert Zubrin’s analogy is strictly
-          limited to frontier economics, new settlement creation, and
-          technological development without romanticizing historical atrocities.
-        </small>
-      )}
-
-      {index === 2 && (
-        <small className="domains-note">
-          Innovation domains: autonomous robotics · closed-loop life support ·
-          mining · recycling · agriculture · surface nuclear · dust mitigation ·
-          radiation shielding · remote medicine · local manufacturing.
-        </small>
-      )}
-
       {index === 10 && (
-        <small
-          style={{
-            display: 'block',
-            marginTop: '6px',
-            color: '#ffbd96',
-            fontSize: '9px',
-            letterSpacing: '1px',
-          }}
-        >
-          Explore. Build. Learn. Expand.
-        </small>
+        <small className="closing-line">Explore. Build. Learn. Expand.</small>
       )}
     </aside>
   )

@@ -5,6 +5,7 @@ Original, unmodified 2K JPEG maps by **Solar System Scope / INOVE**:
 - `2k_earth_clouds.jpg`
 - `2k_mars.jpg`
 - `2k_sun.jpg`
+- `earth_daymap.jpg` (downloaded as `2k_earth_daymap.jpg`)
 
 Source: https://www.solarsystemscope.com/textures/
 
@@ -17,6 +18,15 @@ The application changes their rendered appearance through lighting, materials,
 and color management; the downloaded files are unchanged.
 
 ## Earth surface
+
+The actively rendered Earth uses the Solar System Scope day map above, a separate cloud layer,
+and these unmodified maps distributed with the Three.js examples:
+
+- `earth_specular_2048.jpg`: https://threejs.org/examples/textures/planets/earth_specular_2048.jpg
+- `earth_normal_2048.jpg`: https://threejs.org/examples/textures/planets/earth_normal_2048.jpg
+
+The specular mask is inverted by the material shader to control ocean/land roughness.
+Normal relief is deliberately subtle. These use the Three.js MIT notice below.
 
 `earth_atmos_2048.jpg` is the unmodified Earth map distributed with the Three.js examples:
 https://threejs.org/examples/textures/planets/earth_atmos_2048.jpg

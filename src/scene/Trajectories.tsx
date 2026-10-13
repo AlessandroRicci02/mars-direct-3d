@@ -85,7 +85,7 @@ export function Trajectories({ mission }: { mission: Mission }) {
       const t2 = Math.max(0, t - 0.05)
       second.current.position
         .copy(visualPoint(t2))
-        .add(new THREE.Vector3(2.8, -1.2, 3.0))
+        .add(new THREE.Vector3(-2, 1.4, -2.5))
     }
     if (trail.current) {
       for (let i = 0; i < 32; i++)
@@ -182,7 +182,7 @@ export function Trajectories({ mission }: { mission: Mission }) {
             <b>{crew ? 'CREW HABITAT' : 'EARTH RETURN VEHICLE #1'}</b>
             <small>
               {mission.index === 6
-                ? 'HABITAT + TETHER + SPENT PROPULSION STAGE'
+                ? 'TETHER + SPENT PROPULSION STAGE'
                 : mission.index === 5
                   ? 'HABITAT WITH TMI STAGE'
                   : returning
@@ -196,9 +196,9 @@ export function Trajectories({ mission }: { mission: Mission }) {
         <group ref={second}>
           <Spacecraft scale={0.48} />
           {mission.labels && (
-            <Label position={[0, -2.6, 0]}>
+            <Label position={[-1.2, 3.2, 0]}>
               <b>ERV #2</b>
-              <small>PREPARING THE NEXT MISSION</small>
+              <small>NEXT MISSION · SEPARATE VEHICLE</small>
             </Label>
           )}
         </group>

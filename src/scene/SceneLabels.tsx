@@ -7,6 +7,7 @@ interface Entry {
   color: string
   children: React.ReactNode
   element: HTMLDivElement | null
+  width: number
 }
 const entries = new Map<string, Entry>()
 const listeners = new Set<() => void>()
@@ -37,7 +38,7 @@ export function Label({
   const anchor = useRef<THREE.Group>(null)
   const point = useRef(new THREE.Vector3())
   useLayoutEffect(() => {
-    entries.set(id, { id, color, children, element: null })
+    entries.set(id, { id, color, children, element: null, width: 0 })
     publish()
     return () => {
       entries.delete(id)
@@ -45,7 +46,8 @@ export function Label({
     }
   }, [id, color, children])
   useFrame(({ camera, size }) => {
-    const element = entries.get(id)?.element
+    const entry = entries.get(id)
+    const element = entry?.element
     if (!element || !anchor.current) return
     anchor.current.getWorldPosition(point.current)
     point.current.project(camera)
@@ -59,13 +61,31 @@ export function Label({
       parent = parent.parent
     }
     element.style.visibility = visible ? 'visible' : 'hidden'
-    element.style.transform = `translate(${((point.current.x + 1) * size.width) / 2}px, ${((-point.current.y + 1) * size.height) / 2}px) translate(-50%, -50%)`
+    const padding = Math.min(size.width / 2, (entry?.width || 0) / 2 + 12)
+    const x = THREE.MathUtils.clamp(
+      ((point.current.x + 1) * size.width) / 2,
+      padding,
+      size.width - padding,
+    )
+    element.style.transform = `translate(${x}px, ${((-point.current.y + 1) * size.height) / 2}px) translate(-50%, -50%)`
   })
   return <group ref={anchor} position={position} />
 }
 
 export function SceneLabels() {
   const labels = useSyncExternalStore(subscribe, () => snapshot)
+  useLayoutEffect(() => {
+    // Measure only when content or viewport changes, never during projection.
+    const observer = new ResizeObserver((changes) => {
+      for (const change of changes) {
+        const entry = labels.find((label) => label.element === change.target)
+        if (entry) entry.width = change.contentRect.width
+      }
+    })
+    for (const label of labels)
+      if (label.element) observer.observe(label.element)
+    return () => observer.disconnect()
+  }, [labels])
   return (
     <div className="scene-labels" aria-hidden="true">
       {labels.map((label) => (
